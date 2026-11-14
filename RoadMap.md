@@ -4,34 +4,32 @@ This is the plan for building the game. I'm making this game on my own, so I wan
 
 The main idea is a cozy 2D farming game where you grow crops, discover new plants, and experiment with different combinations. I want the farming to feel satisfying, but I also want discovering and collecting plants to be a big part of the game. Kinda like that Dragon island or smt
 
-# 1. Get the basics working
+# 1. Get the basics working DONE
 
 Before adding any actual farming, I need to get the world and grid working properly.
 
 - Set up the Unity project and main scene. DONE
 - Set up the camera. DONE
 - Create the Grid and Tilemaps. DONE
-- Set up the ground Tilemap.
+- Set up the ground Tilemap. DONE
 - Set up the Tilemap used for displaying the mouse highlight. DONE
 - Get the mouse position in the world. DONE
 - Convert the mouse position into a grid cell. DONE
 - Make the correct tile highlight when I move the mouse. DONE
 - Make sure the highlight disappears when the mouse leaves the playable area. DONE
-- Set up the farm boundaries.
+- Set up the farm boundaries. DONE
 - Make sure the grid still works when the camera moves or zooms. DONE
 
-# 2. Build the farming area
+# 2. Build the farming area ONGOING
 
 Now that the grid works, I can start making the actual farm.
 
-- Create the initial world layout.
-- Set up the ground and farmland Tilemaps.
-- Make a clear distinction between normal ground and farmland.
-- Keep track of which tiles can be farmed.
-- Add the ability to till soil.
+- Make a clear distinction between normal ground and farmland. DONE
+- Keep track of which tiles can be farmed. 
+- Add the ability to till soil. DONE
 - Add the ability to water soil.
-- Make sure each tile remembers its own state.
-- Display the correct appearance for each soil state.
+- Make sure each tile remembers its own state. DONE
+- Display the correct appearance for each soil state. DONE
 - Prevent interactions with tiles that shouldn't be usable.
 
 # 3. Get crops working
@@ -107,6 +105,7 @@ Tasks:
 
 # 8. Expand the world
 
+- Create the world layout.
 - Add more areas to explore.
 - Add decorations and environmental details.
 - Add different types of ground and terrain.

@@ -29,6 +29,7 @@ public class MouseToGrid : MonoBehaviour
             mouseDisplayMap.SetTile(lastTile, null);
             lastTile = MouseCell;
             mouseDisplayMap.SetTile(MouseCell, OverlayTile);
+            GameManager.MousePosition = MouseCell;
         }
     }
 }

@@ -17,7 +17,7 @@ public class CameraMovement : MonoBehaviour
     private Vector3 targetPosition;
     void Start()
     {
-        targetPosition.z = transform.position.z;
+        targetPosition = transform.position;
     }
     private void Update()
     {
