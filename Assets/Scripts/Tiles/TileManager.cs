@@ -17,10 +17,6 @@ public class TileManager : MonoBehaviour
     {
         instance = this;
     }
-    public void RegisterTile(Vector3Int position, GroundType type)
-    {
-        tiles[position] = new TileData(type);
-    }
     public TileData GetorCreateTile(Vector3Int position)
     {
         if(!tiles.TryGetValue(position, out TileData data))
@@ -30,21 +26,28 @@ public class TileManager : MonoBehaviour
         }
         return data;
     }
-    public void SetGroundTile(Vector3Int position, GroundType type)
+    public void TillTile(Vector3Int position)
     {
         TileData data = GetorCreateTile(position);
 
-        if(data == null)
-            return;
-        data.groundType = type;
-
-        TileBase tile = type switch
+        if(data.groundType != GroundType.Grass)
         {
-            GroundType.Grass => grassTile,
-            GroundType.Tilled => tilledTile,
-            GroundType.Watered => wateredTile,
-            _ => grassTile
-        };
-        groundTilemap.SetTile(position, tile);
+            return;
+        }
+        data.groundType = GroundType.Tilled;
+
+        groundTilemap.SetTile(position, tilledTile);
+    }
+    public void WaterTile(Vector3Int position)
+    {
+        TileData data = GetorCreateTile(position);
+
+        if (data.groundType != GroundType.Tilled)
+        {
+            return;
+        }
+        data.groundType = GroundType.Watered;
+
+        groundTilemap.SetTile(position, wateredTile);
     }
 }

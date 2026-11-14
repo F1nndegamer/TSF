@@ -4,14 +4,18 @@ public enum GroundType
     Tilled,
     Watered
 }
+
 [System.Serializable]
 public class TileData
 {
-    public GroundType groundType = GroundType.Grass;
+    public GroundType groundType;
     public bool hasCrop;
-    public TileData(GroundType type)
+    public bool hasFertiliser;
+
+    public TileData(GroundType type = GroundType.Grass)
     {
         groundType = type;
         hasCrop = false;
+        hasFertiliser = false;
     }
 }

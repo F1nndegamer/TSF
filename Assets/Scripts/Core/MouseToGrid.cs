@@ -9,9 +9,9 @@ public class MouseToGrid : MonoBehaviour
     public Tilemap mouseDisplayMap; // overlay map
     public Tile OverlayTile;
     private Vector3Int lastTile;
+    public bool ShowMouse;
     void Start()
     {
-        Cursor.visible = false;
         cam = Camera.main;
         grid = FindAnyObjectByType<Grid>();
     }
@@ -24,12 +24,16 @@ public class MouseToGrid : MonoBehaviour
 
         point = cam.ScreenToWorldPoint(new Vector2(mousePos.x, mousePos.y));
         Vector3Int MouseCell = grid.WorldToCell(point);
-        if(MouseCell != lastTile)
+        if (MouseCell != lastTile)
         {
             mouseDisplayMap.SetTile(lastTile, null);
             lastTile = MouseCell;
             mouseDisplayMap.SetTile(MouseCell, OverlayTile);
             GameManager.MousePosition = MouseCell;
         }
+    }
+    private void OnValidate()
+    {
+        Cursor.visible = ShowMouse;
     }
 }
