@@ -50,4 +50,25 @@ public class TileManager : MonoBehaviour
 
         groundTilemap.SetTile(position, wateredTile);
     }
+    public void PlantTile(Vector3Int position, PlantData plantData)
+    {
+        TileData data = GetorCreateTile(position);
+        if (data.groundType == GroundType.Grass)
+        {
+            return;
+        }
+        if(data.hasCrop)
+            return;
+        if(PlantManager.instance.SpawnPlant(position, plantData))
+        {
+            data.hasCrop = true;
+        }
+    }
+    public void HarvestTile(Vector3Int position)
+    {
+        TileData data = GetorCreateTile(position);
+        if (!data.hasCrop)
+            return;
+        PlantManager.instance.HarvestPlant(position);
+    }
 }

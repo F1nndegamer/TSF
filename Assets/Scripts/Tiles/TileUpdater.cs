@@ -1,5 +1,6 @@
 using System;
 using UnityEditor.Tilemaps;
+using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -9,11 +10,13 @@ public enum ToolType
     Hoe,
     Can,
     Seeds,
+    Sythe,
 }
 public class TileUpdater : MonoBehaviour
 {
     public ToolType selectedtool = ToolType.Hoe;
     private Vector3Int lastTilePosition = new Vector3Int(int.MinValue, int.MinValue);
+    public PlantData SelectedPlant; //TODO: This is just 1 plant for now
     void Update()
     {
         HandleToolSelection();
@@ -41,6 +44,10 @@ public class TileUpdater : MonoBehaviour
                 TileManager.instance.WaterTile(currentPosition);
                 break;
             case ToolType.Seeds:
+                TileManager.instance.PlantTile(currentPosition, SelectedPlant);
+                break;
+            case ToolType.Sythe:
+                TileManager.instance.HarvestTile(currentPosition);
                 break;
         }
     }
@@ -56,6 +63,8 @@ public class TileUpdater : MonoBehaviour
         if (kb.digit3Key.wasPressedThisFrame)
             SelectTool(ToolType.Seeds);
         if (kb.digit4Key.wasPressedThisFrame)
+            SelectTool(ToolType.Sythe);
+        if(kb.digit5Key.wasPressedThisFrame)
             SelectTool(ToolType.Nothing);
 
     }

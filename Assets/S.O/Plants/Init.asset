@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aab9d1b7541eb65bfbc1606d3757931d, type: 3}
+  m_Name: Init
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantName: Init
+  growStageTime: 24
+  growStages:
+  - {fileID: 11400000, guid: 26c59ab0e80510c7b925d462044a0478, type: 2}
+  - {fileID: 11400000, guid: 71b5fba87f7dc0fd99653fd4b389763e, type: 2}
+  - {fileID: 11400000, guid: c1e7dd058642f4288a8435159d93008a, type: 2}
+  - {fileID: 11400000, guid: c6b2670e45bfa5ddab44a994690a34c8, type: 2}
+  - {fileID: 11400000, guid: 4a1fc4b47bf8269618e0138bb4995179, type: 2}
+  harvestYield: 2
+  seedCost: 1

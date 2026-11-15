@@ -20,36 +20,34 @@ Before adding any actual farming, I need to get the world and grid working prope
 - Set up the farm boundaries. DONE
 - Make sure the grid still works when the camera moves or zooms. DONE
 
-# 2. Build the farming area ONGOING
+# 2. Build the farming area DONE
 
 Now that the grid works, I can start making the actual farm.
 
 - Make a clear distinction between normal ground and farmland. DONE
-- Keep track of which tiles can be farmed. 
 - Add the ability to till soil. DONE
-- Add the ability to water soil.
+- Add the ability to water soil. DONE
 - Make sure each tile remembers its own state. DONE
 - Display the correct appearance for each soil state. DONE
-- Prevent interactions with tiles that shouldn't be usable.
+- Prevent interactions with tiles that shouldn't be usable. DONE
 
-# 3. Get crops working
+# 3. Get crops working ONGOING
 
-- Add a way to plant seeds.
-- Make sure seeds can only be planted in suitable soil.
-- Make crops grow over real time.
-- Add different growth stages.
-- Display the correct sprite for each growth stage.
-- Make watering speed up growth.
-- Make crops grow even when I'm not actively interacting with them.
-- Add harvesting.
-- Give the player the correct amount of produce after harvesting.
-- Make sure harvested crops leave the soil in the correct state.
+- Add a way to plant seeds. DONE
+- Make sure seeds can only be planted in suitable soil. DONE
+- Make crops grow over real time. DONE
+- Add different growth stages. DONE
+- Display the correct sprite for each growth stage. DONE
+- Make watering speed up growth. DONE- Only grow with water
+- Make crops grow even when I'm not actively interacting with them. DONE
+- Add harvesting. DONE
+- Give the player the correct amount of produce after harvesting. NEXT
+- Make sure harvested crops leave the soil in the correct state. DONE
 
 The first crop will be the turnip:
 
 - Growth time: 24 seconds.
-- Growth stages: 4.
-- Watering multiplier: 1.75x.
+- Growth stages: 6.
 - Seed cost: 1.
 - Harvest yield: 2 turnips.
 
@@ -60,7 +58,8 @@ The first crop will be the turnip:
 - Keep track of item quantities.
 - Display the inventory on screen.
 - Add seeds to the inventory.
-- Make planting consume seeds.
+- Ability to sell Seeds
+- Make planting consume Money.
 - Make harvesting add crops.
 - Handle items that the player doesn't have enough of.
 
