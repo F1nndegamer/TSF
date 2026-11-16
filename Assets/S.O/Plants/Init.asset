@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Init
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   plantName: Init
-  growStageTime: 24
+  growthTime: 5
   growStages:
   - {fileID: 11400000, guid: 26c59ab0e80510c7b925d462044a0478, type: 2}
   - {fileID: 11400000, guid: 71b5fba87f7dc0fd99653fd4b389763e, type: 2}

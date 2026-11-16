@@ -53,15 +53,15 @@ The first crop will be the turnip:
 
 # 4. Add an inventory
 
-- Create an inventory system.
-- Add and remove items.
-- Keep track of item quantities.
-- Display the inventory on screen.
-- Add seeds to the inventory.
-- Ability to sell Seeds
-- Make planting consume Money.
-- Make harvesting add crops.
-- Handle items that the player doesn't have enough of.
+- Create an inventory system. Kinda
+- Add and remove items. DONE
+- Keep track of item quantities. DONE
+- Display the inventory on screen. NEXT
+- Add seeds to the inventory. Kinda
+- Ability to sell Seeds DONE
+- Make planting consume Money. DONE
+- Make harvesting add crops. DONE
+- Handle items that the player doesn't have enough of. DONE
 
 # 5. Make adding new crops easier
 
@@ -75,10 +75,10 @@ The first crop will be the turnip:
 
 Tasks:
 
-- Create a CropDefinition.
+- Create a CropDefinition. DOPNE
 - Create a way to keep track of all available crops.
-- Move the turnip's information into a CropDefinition.
-- Make sure the farming system works with different crop definitions.
+- Move the turnip's information into a CropDefinition. DONE
+- Make sure the farming system works with different crop definitions. NEXT
 - Add a few more crops to test it.
 - Make sure adding a crop doesn't require changing the farming system itself.
 

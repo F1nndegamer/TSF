@@ -11,12 +11,18 @@ public enum ToolType
     Can,
     Seeds,
     Sythe,
+    UnTill,
 }
 public class TileUpdater : MonoBehaviour
 {
+    public static TileUpdater instance;
     public ToolType selectedtool = ToolType.Hoe;
     private Vector3Int lastTilePosition = new Vector3Int(int.MinValue, int.MinValue);
     public PlantData SelectedPlant; //TODO: This is just 1 plant for now
+    void Awake()
+    {
+        instance = this;
+    }
     void Update()
     {
         HandleToolSelection();
@@ -49,6 +55,9 @@ public class TileUpdater : MonoBehaviour
             case ToolType.Sythe:
                 TileManager.instance.HarvestTile(currentPosition);
                 break;
+            case ToolType.UnTill:
+                 TileManager.instance.UntillTile(currentPosition);
+                 break;
         }
     }
     private void HandleToolSelection()
@@ -66,6 +75,8 @@ public class TileUpdater : MonoBehaviour
             SelectTool(ToolType.Sythe);
         if(kb.digit5Key.wasPressedThisFrame)
             SelectTool(ToolType.Nothing);
+        if(kb.digit8Key.wasPressedThisFrame)
+            SelectTool(ToolType.UnTill);
 
     }
     private void SelectTool(ToolType tool)

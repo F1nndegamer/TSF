@@ -71,4 +71,23 @@ public class TileManager : MonoBehaviour
             return;
         PlantManager.instance.HarvestPlant(position);
     }
+    public void UntillTile(Vector3Int position)
+    {
+        TileData data = GetorCreateTile(position);
+        if (data.hasCrop)
+            return;
+        if(data.groundType != GroundType.Tilled)
+            return;
+        data.groundType = GroundType.Grass;
+        groundTilemap.SetTile(position, grassTile);
+    }
+    public void UnWaterTile(Vector3Int position)
+    {
+        TileData data = GetorCreateTile(position);
+
+        if (data.groundType != GroundType.Watered)
+            return;
+        data.groundType = GroundType.Tilled;
+        groundTilemap.SetTile(position, tilledTile);
+    }
 }
