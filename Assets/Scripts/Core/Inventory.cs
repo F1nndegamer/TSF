@@ -27,97 +27,99 @@ public class Inventory : MonoBehaviour
             return;
         if (kb.digit6Key.wasPressedThisFrame)
         {
-            PlantData data = TileUpdater.instance.SelectedPlant;
-            money = plants[data] * data.harvestYield;
+            SellPlants();
         }
         if (kb.digit7Key.wasPressedThisFrame)
         {
-            PlantData data = TileUpdater.instance.SelectedPlant;
-            int seedBuyAmount = money / data.seedCost;
-            AddSeeds(data, seedBuyAmount);
-            money = 0;
+            BuySeeds();
         }
-        if(kb.eKey.wasPressedThisFrame)
+        if (kb.eKey.wasPressedThisFrame)
         {
             GameManager.IsInventoryOpen = !GameManager.IsInventoryOpen;
             inventoryPanel.SetActive(GameManager.IsInventoryOpen);
             InitialiseInv();
         }
     }
+    private void SellPlants()
+    {
+        PlantData data = TileUpdater.instance.SelectedPlant;
+        int amount = TryGetPlant(data);
+        if (amount <= 0)
+            return;
+        money += amount * data.sellPrice;
+        SetPlant(data, 0);
+    }
+    private void BuySeeds()
+    {
+        PlantData data = TileUpdater.instance.SelectedPlant;
+        if (data.seedCost <= 0)
+            return;
+        int amount = money / data.seedCost;
+        if (amount <= 0)
+            return;
+        AddSeeds(data, amount);
+        money -= amount * data.seedCost;
+    }
     public void InitialiseInv()
     {
-        
+
     }
     #region PlantInv
     public void AddPlant(PlantData data, int amount)
     {
-        if (!plants.TryGetValue(data, out int plantamount))
-        {
-            plants.Add(data, amount);
-            return;
-        }
-        plants[data] = plantamount + amount;
+        plants.TryGetValue(data, out int current);
+        plants[data] = current + amount;
     }
     public void RemovePlant(PlantData data, int amount)
     {
-        if (!plants.TryGetValue(data, out int plantamount))
+        int current = TryGetPlant(data);
+        if(current - amount <= 0)
         {
-            plants.Add(data, amount);
+            Debug.Log("Negative plants");
             return;
         }
-        plants[data] = plantamount - amount;
+        plants[data] = current - amount;
     }
     public void SetPlant(PlantData data, int amount)
     {
-        if (!plants.TryGetValue(data, out int plantamount))
-        {
-            plants.Add(data, amount);
-            return;
-        }
-        plants[data] = amount;
+        plants[data] = Mathf.Max(0, amount);
     }
     public int TryGetPlant(PlantData data)
     {
-        if (!plants.TryGetValue(data, out int plantamount))
+        if (!plants.TryGetValue(data, out int amount))
         {
-            return plantamount;
+            plants.Add(data, 0);
+            amount = 0;
         }
-        return int.MinValue;
+        return amount;
     }
     public void AddSeeds(PlantData data, int amount)
     {
-        if (!seeds.TryGetValue(data, out int seedamount))
-        {
-            seeds.Add(data, amount);
-            return;
-        }
-        seeds[data] = seedamount + amount;
+        seeds.TryGetValue(data, out int current);
+        seeds[data] = current + amount;
     }
     public void RemoveSeeds(PlantData data, int amount)
     {
-        if (!seeds.TryGetValue(data, out int seedamount))
+        int current = TryGetSeeds(data);
+        if(current - amount <= 0)
         {
-            seeds.Add(data, amount);
+            Debug.Log("Negative Seeds");
             return;
         }
-        seeds[data] = seedamount - amount;
+        seeds[data] = current - amount;
     }
-    public void SetSeeds(PlantData data, int amount)
+    public void SetSeed(PlantData data, int amount)
     {
-        if (!seeds.TryGetValue(data, out int seedamount))
-        {
-            seeds.Add(data, amount);
-            return;
-        }
-        seeds[data] = amount;
+        seeds[data] = Mathf.Max(0, amount);
     }
     public int TryGetSeeds(PlantData data)
     {
-        if (seeds.TryGetValue(data, out int seedamount))
+        if (!seeds.TryGetValue(data, out int amount))
         {
-            return seedamount;
+            seeds.Add(data, 0);
+            amount = 0;
         }
-        return int.MinValue;
+        return amount;
     }
     #endregion
 

@@ -24,8 +24,6 @@ public class PlantManager : MonoBehaviour
             return;
 
         //Add Plants to inventor
-        Debug.Log(Inventory.instance == null);
-        Debug.Log(plant.data.plantName + plant.data.harvestYield);
         Inventory.instance.AddPlant(plant.data, plant.data.harvestYield);
 
         TileManager.instance.GetorCreateTile(position).hasCrop = false;
@@ -38,7 +36,9 @@ public class PlantManager : MonoBehaviour
 
         if (plants.ContainsKey(position))
             return false;
-        if (data == null || data.growStages.Length == 0)
+        if (data == null || data.growStages.Length == 0 || data.growStages == null)
+            return false;
+        if (data.growthTime <= 0)
             return false;
         if (Inventory.instance.TryGetSeeds(data) > 0)
         {
@@ -61,7 +61,9 @@ public class PlantManager : MonoBehaviour
             PlantInstance plant = pair.Value;
             if (plant.IsFullyGrown())
             {
-                TileManager.instance.UnWaterTile(position);
+                TileData grownTileData = TileManager.instance.GetorCreateTile(position);
+                if (grownTileData.groundType == GroundType.Watered)
+                    TileManager.instance.UnWaterTile(position);
                 continue;
             }
             TileData tileData = TileManager.instance.GetorCreateTile(position);
