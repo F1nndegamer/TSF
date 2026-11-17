@@ -30,7 +30,7 @@ public class CameraMovement : MonoBehaviour
             speed = basespeed;
         }
         Vector3 movement = Vector3.zero;
-
+        
         //TODO: I am using hardCoded Inputs, later Ill use actions for keybinds
         if (Keyboard.current.wKey.isPressed) movement.y += 1;
         if (Keyboard.current.sKey.isPressed) movement.y -= 1;

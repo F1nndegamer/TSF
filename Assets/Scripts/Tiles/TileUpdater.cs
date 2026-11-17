@@ -74,9 +74,9 @@ public class TileUpdater : MonoBehaviour
         if (kb.digit4Key.wasPressedThisFrame)
             SelectTool(ToolType.Sythe);
         if(kb.digit5Key.wasPressedThisFrame)
-            SelectTool(ToolType.Nothing);
-        if(kb.digit8Key.wasPressedThisFrame)
             SelectTool(ToolType.UnTill);
+        if(kb.digit8Key.wasPressedThisFrame)
+            SelectTool(ToolType.Nothing);
 
     }
     private void SelectTool(ToolType tool)

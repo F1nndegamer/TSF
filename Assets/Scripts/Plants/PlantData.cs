@@ -10,6 +10,8 @@ public class PlantData : ScriptableObject
     // 0 is initial
     public TileBase[] growStages;
 
+    public Sprite inventorySprite;
+    public Sprite seedinventorySprite;
     public int harvestYield = 2;
     public int seedCost = 1;
     public int sellPrice;

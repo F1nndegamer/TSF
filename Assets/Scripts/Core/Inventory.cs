@@ -4,16 +4,40 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
+using UnityEngine.UI;
+public enum Tabs
+{
+    All,
+    Plants,
+    Seeds,
+    Other,
+}
 public class Inventory : MonoBehaviour
 {
+    public int money = 0;
+    public GameObject inventoryPanel;
+
+    public Transform contentParent;
+    public GameObject slotPrefab;
+
+    public Transform tabParent;
+    public Sprite activeTab;
+    public Sprite inactiveTab;
+    private Tabs currentTab = Tabs.All;
+    private List<GameObject> activeSlots = new();
+
     private Dictionary<PlantData, int> seeds = new();
     private Dictionary<PlantData, int> plants = new();
-    public int money = 0;
+
     public static Inventory instance;
-    public GameObject inventoryPanel;
     private void Start()
     {
         AddSeeds(TileUpdater.instance.SelectedPlant, 2);
+        tabParent.GetChild(0).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.All));
+        tabParent.GetChild(1).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Seeds));
+        tabParent.GetChild(2).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Plants));
+        tabParent.GetChild(3).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Other));
     }
     void Awake()
     {
@@ -71,7 +95,62 @@ public class Inventory : MonoBehaviour
     }
     public void InitialiseInv()
     {
-
+        foreach (GameObject slot in activeSlots)
+        {
+            Destroy(slot);
+        }
+        activeSlots.Clear();
+        void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
+        {
+            if (currentTab != Tabs.All && currentTab != itemCatagory)
+                return;
+            foreach (var kvp in dictionary)
+            {
+                if (kvp.Value <= 0) continue;
+                GameObject slotObj = Instantiate(slotPrefab, contentParent);
+                activeSlots.Add(slotObj);
+                InventoryItem item = slotObj.GetComponent<InventoryItem>();
+                item.countText.text = kvp.Value.ToString();
+                item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seedinventorySprite : kvp.Key.inventorySprite;
+            }
+        }
+        if (currentTab == Tabs.All || currentTab == Tabs.Seeds)
+        {
+            CreateSlots(seeds, Tabs.Seeds);
+        }
+        if (currentTab == Tabs.All || currentTab == Tabs.Plants)
+        {
+            CreateSlots(plants, Tabs.Plants);
+        }
+    }
+    public void SwitchTabs(Tabs tab)
+    {
+        currentTab = tab;
+        List<GameObject> tabObject = new();
+        foreach (Transform child in tabParent)
+        {
+            tabObject.Add(child.gameObject);
+            child.GetComponent<Image>().sprite = inactiveTab;
+        }
+        switch (tab)
+        {
+            case Tabs.All:
+                tabParent.transform.GetChild(0).GetComponent<Image>().sprite = activeTab;
+                break;
+            case Tabs.Seeds:
+                tabParent.transform.GetChild(1).GetComponent<Image>().sprite = activeTab;
+                break;
+            case Tabs.Plants:
+                tabParent.transform.GetChild(2).GetComponent<Image>().sprite = activeTab;
+                break;
+            case Tabs.Other:
+                tabParent.transform.GetChild(3).GetComponent<Image>().sprite = activeTab;
+                break;
+        }
+        if (GameManager.IsInventoryOpen)
+        {
+            InitialiseInv();
+        }
     }
     #region PlantInv
     public void AddPlant(PlantData data, int amount)
@@ -82,11 +161,6 @@ public class Inventory : MonoBehaviour
     public void RemovePlant(PlantData data, int amount)
     {
         int current = TryGetPlant(data);
-        if (current - amount <= 0)
-        {
-            Debug.Log("Negative plants");
-            return;
-        }
         plants[data] = current - amount;
     }
     public void SetPlant(PlantData data, int amount)
@@ -110,11 +184,7 @@ public class Inventory : MonoBehaviour
     public void RemoveSeeds(PlantData data, int amount)
     {
         int current = TryGetSeeds(data);
-        if (current - amount <= 0)
-        {
-            Debug.Log("Negative Seeds");
-            return;
-        }
+        Debug.Log(current + " - " + amount + " = " + (current - amount));
         seeds[data] = current - amount;
     }
     public void SetSeed(PlantData data, int amount)
@@ -131,5 +201,4 @@ public class Inventory : MonoBehaviour
         return amount;
     }
     #endregion
-
 }
