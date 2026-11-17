@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
+using System;
+using UnityEditor.Toolbars;
 public enum Tabs
 {
     All,
@@ -16,8 +19,9 @@ public enum Tabs
 public class Inventory : MonoBehaviour
 {
     public int money = 0;
+    public TextMeshProUGUI moneyText;
     public GameObject inventoryPanel;
-
+    public TextMeshProUGUI DetailText;
     public Transform contentParent;
     public GameObject slotPrefab;
 
@@ -33,7 +37,10 @@ public class Inventory : MonoBehaviour
     public static Inventory instance;
     private void Start()
     {
-        AddSeeds(TileUpdater.instance.SelectedPlant, 2);
+        foreach (PlantData data in TileUpdater.instance.startPlants)
+        {
+            AddSeeds(data, 2);
+        }
         tabParent.GetChild(0).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.All));
         tabParent.GetChild(1).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Seeds));
         tabParent.GetChild(2).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Plants));
@@ -51,11 +58,11 @@ public class Inventory : MonoBehaviour
             return;
         if (kb.digit6Key.wasPressedThisFrame)
         {
-            SellPlants();
+            SellPlants(TileUpdater.instance.selectedPlant);
         }
         if (kb.digit7Key.wasPressedThisFrame)
         {
-            BuySeeds();
+            BuySeeds(TileUpdater.instance.selectedPlant);
         }
         if (kb.eKey.wasPressedThisFrame)
         {
@@ -70,21 +77,20 @@ public class Inventory : MonoBehaviour
         MouseToGrid.Instance.ChangeCursor(isOpen); //if isOpen force the cursor to be visible
         if (isOpen)
             InitialiseInv();
-
     }
 
-    private void SellPlants()
+    private void SellPlants(PlantData data)
     {
-        PlantData data = TileUpdater.instance.SelectedPlant;
         int amount = TryGetPlant(data);
         if (amount <= 0)
             return;
         money += amount * data.sellPrice;
         SetPlant(data, 0);
+        string formatted = money.ToString("D3");
+        moneyText.text = formatted + "g";
     }
-    private void BuySeeds()
+    private void BuySeeds(PlantData data)
     {
-        PlantData data = TileUpdater.instance.SelectedPlant;
         if (data.seedCost <= 0)
             return;
         int amount = money / data.seedCost;
@@ -92,6 +98,8 @@ public class Inventory : MonoBehaviour
             return;
         AddSeeds(data, amount);
         money -= amount * data.seedCost;
+        string formatted = money.ToString("D3");
+        moneyText.text = formatted + "g";
     }
     public void InitialiseInv()
     {
@@ -110,6 +118,8 @@ public class Inventory : MonoBehaviour
                 GameObject slotObj = Instantiate(slotPrefab, contentParent);
                 activeSlots.Add(slotObj);
                 InventoryItem item = slotObj.GetComponent<InventoryItem>();
+                String details = itemCatagory == Tabs.Seeds ? kvp.Key.seedDetails : kvp.Key.plantDetails;
+                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details));
                 item.countText.text = kvp.Value.ToString();
                 item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seedinventorySprite : kvp.Key.inventorySprite;
             }
@@ -122,6 +132,10 @@ public class Inventory : MonoBehaviour
         {
             CreateSlots(plants, Tabs.Plants);
         }
+    }
+    public void ShowDetails(string details)
+    {
+        DetailText.text = details;
     }
     public void SwitchTabs(Tabs tab)
     {
@@ -153,6 +167,10 @@ public class Inventory : MonoBehaviour
         }
     }
     #region PlantInv
+    public void SetActiveSeed(PlantData data)
+    {
+        TileUpdater.instance.selectedPlant = data;
+    }
     public void AddPlant(PlantData data, int amount)
     {
         plants.TryGetValue(data, out int current);

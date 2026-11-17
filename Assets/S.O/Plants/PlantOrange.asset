@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aab9d1b7541eb65bfbc1606d3757931d, type: 3}
+  m_Name: PlantOrange
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantName: Orangeturn
+  growthTime: 5
+  growStages:
+  - {fileID: 11400000, guid: 09e4d2d9534f452fa86f57a2d7f6aa48, type: 2}
+  - {fileID: 11400000, guid: a769a5a49612dbe229ebdcdd17b8617e, type: 2}
+  - {fileID: 11400000, guid: 1f29a521b1bc9c1e5bceb1d34629c0e7, type: 2}
+  - {fileID: 11400000, guid: 055c2d750303adf85805712aaf8c8502, type: 2}
+  - {fileID: 11400000, guid: 60d4f43172cc389e6a546b2f7cbfcda5, type: 2}
+  inventorySprite: {fileID: 21300000, guid: e6e58f3abd10e839e9ea7c87c66a2058, type: 3}
+  seedinventorySprite: {fileID: 143529499, guid: 3b4001823444d44f996a5e6138b9a6a9, type: 3}
+  plantDetails: 'Orange Turnip
+
+    Type: Crop
+
+    Season: Spring
+
+    Quality: Normal
+
+    Sell: 60g
+
+    Energy: +25
+
+    Health: +10
+
+    Edible: Yes
+
+    Use: Cooking
+
+    Origin: Farm
+
+    Rarity: Common
+
+    Stack: 99 Max
+
+    Crisp and sweet.'
+  seedDetails: 'Orange Seeds
+
+    Type: Seed
+
+    Season: Spring
+
+    Grow Time: 4d
+
+    Water: Daily
+
+    Buy: 20g
+
+    Sell: 10g
+
+    Yield: 1 Crop
+
+    Regrows: No
+
+    Soil: Tilled
+
+    Quality: Basic
+
+    Stack: 99 Max
+
+    Plant in spring.'
+  harvestYield: 2
+  seedCost: 1
+  sellPrice: 2

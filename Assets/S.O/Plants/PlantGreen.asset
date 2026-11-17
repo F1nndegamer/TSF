@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aab9d1b7541eb65bfbc1606d3757931d, type: 3}
-  m_Name: Init
+  m_Name: PlantGreen
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
-  plantName: Init
+  plantName: GreenPlant
   growthTime: 5
   growStages:
   - {fileID: 11400000, guid: 26c59ab0e80510c7b925d462044a0478, type: 2}
@@ -22,6 +22,56 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4a1fc4b47bf8269618e0138bb4995179, type: 2}
   inventorySprite: {fileID: 21300000, guid: e6e58f3abd10e839e9ea7c87c66a2058, type: 3}
   seedinventorySprite: {fileID: -246621466, guid: 162479233929054869f5dc5be8968ca6, type: 3}
+  plantDetails: 'Green Turnip
+
+    Type: Crop
+
+    Season: Spring
+
+    Quality: Normal
+
+    Sell: 60g
+
+    Energy: +25
+
+    Health: +10
+
+    Edible: Yes
+
+    Use: Cooking
+
+    Origin: Farm
+
+    Rarity: Common
+
+    Stack: 99 Max
+
+    Crisp and sweet.'
+  seedDetails: 'Green Turnip Seeds
+
+    Type: Seed
+
+    Season: Spring
+
+    Grow Time: 4d
+
+    Water: Daily
+
+    Buy: 20g
+
+    Sell: 10g
+
+    Yield: 1 Crop
+
+    Regrows: No
+
+    Soil: Tilled
+
+    Quality: Basic
+
+    Stack: 99 Max
+
+    Plant in spring.'
   harvestYield: 2
   seedCost: 1
   sellPrice: 2

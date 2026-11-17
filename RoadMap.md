@@ -41,10 +41,10 @@ Now that the grid works, I can start making the actual farm.
 - Make watering speed up growth. DONE- Only grow with water
 - Make crops grow even when I'm not actively interacting with them. DONE
 - Add harvesting. DONE
-- Give the player the correct amount of produce after harvesting. NEXT
+- Give the player the correct amount of produce after harvesting. DONE 
 - Make sure harvested crops leave the soil in the correct state. DONE
 
-The first crop will be the turnip:
+The first crop will be the turnip: Kinda done IG
 
 - Growth time: 24 seconds.
 - Growth stages: 6.
@@ -53,11 +53,11 @@ The first crop will be the turnip:
 
 # 4. Add an inventory
 
-- Create an inventory system. Kinda
+- Create an inventory system. (1 item DONE)
 - Add and remove items. DONE
 - Keep track of item quantities. DONE
-- Display the inventory on screen. NEXT
-- Add seeds to the inventory. Kinda
+- Display the inventory on screen. DONE
+- Add seeds to the inventory. DONE
 - Ability to sell Seeds DONE
 - Make planting consume Money. DONE
 - Make harvesting add crops. DONE
@@ -75,7 +75,7 @@ The first crop will be the turnip:
 
 Tasks:
 
-- Create a CropDefinition. DOPNE
+- Create a CropDefinition. DONE
 - Create a way to keep track of all available crops.
 - Move the turnip's information into a CropDefinition. DONE
 - Make sure the farming system works with different crop definitions. NEXT

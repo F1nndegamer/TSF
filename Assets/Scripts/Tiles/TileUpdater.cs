@@ -4,6 +4,7 @@ using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 public enum ToolType
 {
     Nothing,
@@ -18,7 +19,15 @@ public class TileUpdater : MonoBehaviour
     public static TileUpdater instance;
     public ToolType selectedtool = ToolType.Hoe;
     private Vector3Int lastTilePosition = new Vector3Int(int.MinValue, int.MinValue);
-    public PlantData SelectedPlant; //TODO: This is just 1 plant for now
+    public PlantData selectedPlant; //TODO: This is just 1 plant for now
+    public PlantData[] startPlants;
+    public Transform hotBarParent;
+    public Sprite activeSprite;
+    public Sprite inActiveSprite;
+    void Start()
+    {
+        SelectTool(selectedtool);
+    }
     void Awake()
     {
         instance = this;
@@ -50,14 +59,14 @@ public class TileUpdater : MonoBehaviour
                 TileManager.instance.WaterTile(currentPosition);
                 break;
             case ToolType.Seeds:
-                TileManager.instance.PlantTile(currentPosition, SelectedPlant);
+                TileManager.instance.PlantTile(currentPosition, selectedPlant);
                 break;
             case ToolType.Sythe:
                 TileManager.instance.HarvestTile(currentPosition);
                 break;
             case ToolType.UnTill:
-                 TileManager.instance.UntillTile(currentPosition);
-                 break;
+                TileManager.instance.UntillTile(currentPosition);
+                break;
         }
     }
     private void HandleToolSelection()
@@ -66,6 +75,7 @@ public class TileUpdater : MonoBehaviour
         if (kb == null)
             return;
         if (kb.digit1Key.wasPressedThisFrame)
+
             SelectTool(ToolType.Hoe);
         if (kb.digit2Key.wasPressedThisFrame)
             SelectTool(ToolType.Can);
@@ -73,14 +83,37 @@ public class TileUpdater : MonoBehaviour
             SelectTool(ToolType.Seeds);
         if (kb.digit4Key.wasPressedThisFrame)
             SelectTool(ToolType.Sythe);
-        if(kb.digit5Key.wasPressedThisFrame)
+        if (kb.digit5Key.wasPressedThisFrame)
             SelectTool(ToolType.UnTill);
-        if(kb.digit8Key.wasPressedThisFrame)
+        if (kb.digit8Key.wasPressedThisFrame)
             SelectTool(ToolType.Nothing);
 
     }
     private void SelectTool(ToolType tool)
     {
         selectedtool = tool;
+        foreach (Transform child in hotBarParent)
+        {
+            child.GetComponent<Image>().sprite = inActiveSprite;
+        }
+        switch (selectedtool)
+        {
+            case ToolType.Hoe:
+                hotBarParent.GetChild(0).GetComponent<Image>().sprite = activeSprite;
+                break;
+            case ToolType.Can:
+                hotBarParent.GetChild(1).GetComponent<Image>().sprite = activeSprite;
+                break;
+            case ToolType.Seeds:
+                hotBarParent.GetChild(2).GetComponent<Image>().sprite = activeSprite;
+                break;
+            case ToolType.Sythe:
+                hotBarParent.GetChild(3).GetComponent<Image>().sprite = activeSprite;
+                break;
+            case ToolType.UnTill:
+                hotBarParent.GetChild(4).GetComponent<Image>().sprite = activeSprite;
+                break;
+        }
+
     }
 }
