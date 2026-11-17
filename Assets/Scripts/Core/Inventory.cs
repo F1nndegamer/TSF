@@ -35,11 +35,20 @@ public class Inventory : MonoBehaviour
         }
         if (kb.eKey.wasPressedThisFrame)
         {
-            GameManager.IsInventoryOpen = !GameManager.IsInventoryOpen;
-            inventoryPanel.SetActive(GameManager.IsInventoryOpen);
-            InitialiseInv();
+            switchInventory();
         }
     }
+    public void switchInventory()
+    {
+        GameManager.IsInventoryOpen = !GameManager.IsInventoryOpen; //Set Gamemanager to correct state
+        bool isOpen = GameManager.IsInventoryOpen; //IsOpen will be set to correct state
+        inventoryPanel.SetActive(isOpen);
+        MouseToGrid.Instance.ChangeCursor(isOpen); //if isOpen force the cursor to be visible
+        if (isOpen)
+            InitialiseInv();
+
+    }
+
     private void SellPlants()
     {
         PlantData data = TileUpdater.instance.SelectedPlant;
@@ -73,7 +82,7 @@ public class Inventory : MonoBehaviour
     public void RemovePlant(PlantData data, int amount)
     {
         int current = TryGetPlant(data);
-        if(current - amount <= 0)
+        if (current - amount <= 0)
         {
             Debug.Log("Negative plants");
             return;
@@ -101,7 +110,7 @@ public class Inventory : MonoBehaviour
     public void RemoveSeeds(PlantData data, int amount)
     {
         int current = TryGetSeeds(data);
-        if(current - amount <= 0)
+        if (current - amount <= 0)
         {
             Debug.Log("Negative Seeds");
             return;
