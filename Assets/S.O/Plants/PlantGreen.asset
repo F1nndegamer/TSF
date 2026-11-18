@@ -13,15 +13,8 @@ MonoBehaviour:
   m_Name: PlantGreen
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   plantName: GreenPlant
-  growthTime: 5
-  growStages:
-  - {fileID: 11400000, guid: 26c59ab0e80510c7b925d462044a0478, type: 2}
-  - {fileID: 11400000, guid: 71b5fba87f7dc0fd99653fd4b389763e, type: 2}
-  - {fileID: 11400000, guid: c1e7dd058642f4288a8435159d93008a, type: 2}
-  - {fileID: 11400000, guid: c6b2670e45bfa5ddab44a994690a34c8, type: 2}
-  - {fileID: 11400000, guid: 4a1fc4b47bf8269618e0138bb4995179, type: 2}
   inventorySprite: {fileID: 21300000, guid: e6e58f3abd10e839e9ea7c87c66a2058, type: 3}
-  seedinventorySprite: {fileID: -246621466, guid: 162479233929054869f5dc5be8968ca6, type: 3}
+  location: 0
   plantDetails: 'Green Turnip
 
     Type: Crop
@@ -47,31 +40,6 @@ MonoBehaviour:
     Stack: 99 Max
 
     Crisp and sweet.'
-  seedDetails: 'Green Turnip Seeds
-
-    Type: Seed
-
-    Season: Spring
-
-    Grow Time: 4d
-
-    Water: Daily
-
-    Buy: 20g
-
-    Sell: 10g
-
-    Yield: 1 Crop
-
-    Regrows: No
-
-    Soil: Tilled
-
-    Quality: Basic
-
-    Stack: 99 Max
-
-    Plant in spring.'
   harvestYield: 2
-  seedCost: 1
+  seeds: {fileID: 11400000, guid: ab9522aed48b17bc2b68f145bf3ed481, type: 2}
   sellPrice: 2

@@ -8,7 +8,7 @@ using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using UnityEditor.Toolbars;
+using Unity.VisualScripting;
 public enum Tabs
 {
     All,
@@ -22,18 +22,22 @@ public class Inventory : MonoBehaviour
     public TextMeshProUGUI moneyText;
     public GameObject inventoryPanel;
     public TextMeshProUGUI DetailText;
-    public Transform contentParent;
+    public Transform itemParent;
+    public Transform containerParent;
     public GameObject slotPrefab;
 
     public Transform tabParent;
     public Sprite activeTab;
     public Sprite inactiveTab;
+    public Sprite activeContainer;
+    public Sprite inactiveContainer;
     private Tabs currentTab = Tabs.All;
     private List<GameObject> activeSlots = new();
 
     private Dictionary<PlantData, int> seeds = new();
     private Dictionary<PlantData, int> plants = new();
-
+    private List<Transform> itemSlots = new();
+    private List<Transform> itemParents = new();
     public static Inventory instance;
     private void Start()
     {
@@ -91,13 +95,13 @@ public class Inventory : MonoBehaviour
     }
     private void BuySeeds(PlantData data)
     {
-        if (data.seedCost <= 0)
+        if (data.seeds.seedCost <= 0)
             return;
-        int amount = money / data.seedCost;
+        int amount = money / data.seeds.seedCost;
         if (amount <= 0)
             return;
         AddSeeds(data, amount);
-        money -= amount * data.seedCost;
+        money -= amount * data.seeds.seedCost;
         string formatted = money.ToString("D3");
         moneyText.text = formatted + "g";
     }
@@ -115,13 +119,25 @@ public class Inventory : MonoBehaviour
             foreach (var kvp in dictionary)
             {
                 if (kvp.Value <= 0) continue;
-                GameObject slotObj = Instantiate(slotPrefab, contentParent);
+                if(itemCatagory == Tabs.Seeds) if(kvp.Key.seeds.location != Location.Inventory) continue;
+                if(itemCatagory == Tabs.Plants) if(kvp.Key.location != Location.Inventory) continue;
+                GameObject slotObj = Instantiate(slotPrefab, itemParent);
                 activeSlots.Add(slotObj);
                 InventoryItem item = slotObj.GetComponent<InventoryItem>();
-                String details = itemCatagory == Tabs.Seeds ? kvp.Key.seedDetails : kvp.Key.plantDetails;
-                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details));
+                String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
+                
+                int slotNumber = -1;
+                for(int i = 0; i < itemParent.childCount; i++)
+                {
+                    if(itemParent.GetChild(i).gameObject == slotObj)
+                    {
+                        slotNumber = i;
+                    }
+                }
+
+                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, slotNumber));
                 item.countText.text = kvp.Value.ToString();
-                item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seedinventorySprite : kvp.Key.inventorySprite;
+                item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
             }
         }
         if (currentTab == Tabs.All || currentTab == Tabs.Seeds)
@@ -133,8 +149,13 @@ public class Inventory : MonoBehaviour
             CreateSlots(plants, Tabs.Plants);
         }
     }
-    public void ShowDetails(string details)
+    public void ShowDetails(string details, int slotNumber)
     {
+        foreach(Transform child in containerParent)
+        {
+            child.GetComponent<Image>().sprite = inactiveContainer;
+        }
+        containerParent.GetChild(slotNumber).GetComponent<Image>().sprite = activeContainer;
         DetailText.text = details;
     }
     public void SwitchTabs(Tabs tab)

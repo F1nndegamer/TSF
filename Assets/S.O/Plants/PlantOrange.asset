@@ -13,15 +13,8 @@ MonoBehaviour:
   m_Name: PlantOrange
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   plantName: Orangeturn
-  growthTime: 5
-  growStages:
-  - {fileID: 11400000, guid: 09e4d2d9534f452fa86f57a2d7f6aa48, type: 2}
-  - {fileID: 11400000, guid: a769a5a49612dbe229ebdcdd17b8617e, type: 2}
-  - {fileID: 11400000, guid: 1f29a521b1bc9c1e5bceb1d34629c0e7, type: 2}
-  - {fileID: 11400000, guid: 055c2d750303adf85805712aaf8c8502, type: 2}
-  - {fileID: 11400000, guid: 60d4f43172cc389e6a546b2f7cbfcda5, type: 2}
   inventorySprite: {fileID: 21300000, guid: e6e58f3abd10e839e9ea7c87c66a2058, type: 3}
-  seedinventorySprite: {fileID: 143529499, guid: 3b4001823444d44f996a5e6138b9a6a9, type: 3}
+  location: 0
   plantDetails: 'Orange Turnip
 
     Type: Crop
@@ -47,31 +40,6 @@ MonoBehaviour:
     Stack: 99 Max
 
     Crisp and sweet.'
-  seedDetails: 'Orange Seeds
-
-    Type: Seed
-
-    Season: Spring
-
-    Grow Time: 4d
-
-    Water: Daily
-
-    Buy: 20g
-
-    Sell: 10g
-
-    Yield: 1 Crop
-
-    Regrows: No
-
-    Soil: Tilled
-
-    Quality: Basic
-
-    Stack: 99 Max
-
-    Plant in spring.'
   harvestYield: 2
-  seedCost: 1
+  seeds: {fileID: 11400000, guid: 60e9baf3aa458072795d02ff46e4d1f8, type: 2}
   sellPrice: 2

@@ -7,17 +7,11 @@ public class PlantData : ScriptableObject
 {
     public string plantName;
 
-    public float growthTime = 24f;
-    // 0 is initial
-    public TileBase[] growStages;
-
     public Sprite inventorySprite;
-    public Sprite seedinventorySprite;
+    public Location location = Location.Inventory;
     [TextArea(5, 15)]
     public String plantDetails;
-    [TextArea(5, 15)]
-    public String seedDetails;
     public int harvestYield = 2;
-    public int seedCost = 1;
+    public SeedData seeds;
     public int sellPrice;
 }

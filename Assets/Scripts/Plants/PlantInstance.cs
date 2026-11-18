@@ -14,6 +14,6 @@ public class PlantInstance
     }
     public bool IsFullyGrown()
     {
-        return growthProgress >= data.growthTime;
+        return growthProgress >= data.seeds.growthTime;
     }
 }

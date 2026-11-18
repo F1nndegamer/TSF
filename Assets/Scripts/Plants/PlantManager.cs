@@ -36,9 +36,9 @@ public class PlantManager : MonoBehaviour
 
         if (plants.ContainsKey(position))
             return false;
-        if (data == null || data.growStages.Length == 0 || data.growStages == null)
+        if (data == null || data.seeds.growStages.Length == 0 || data.seeds.growStages == null)
             return false;
-        if (data.growthTime <= 0)
+        if (data.seeds.growthTime <= 0)
             return false;
         if (Inventory.instance.TryGetSeeds(data) > 0)
         {
@@ -50,7 +50,7 @@ public class PlantManager : MonoBehaviour
         }
         PlantInstance plant = new PlantInstance(data);
         plants.Add(position, plant);
-        plantTileMap.SetTile(position, data.growStages[0]);
+        plantTileMap.SetTile(position, data.seeds.growStages[0]);
         return true;
     }
     private void UpdateGrowth()
@@ -70,11 +70,11 @@ public class PlantManager : MonoBehaviour
             if (tileData.groundType != GroundType.Watered)
                 continue;
             plant.growthProgress += Time.deltaTime;
-            int newstage = Mathf.Clamp(Mathf.FloorToInt(plant.growthProgress / plant.data.growthTime * plant.data.growStages.Length), 0, plant.data.growStages.Length - 1);
+            int newstage = Mathf.Clamp(Mathf.FloorToInt(plant.growthProgress / plant.data.seeds.growthTime * plant.data.seeds.growStages.Length), 0, plant.data.seeds.growStages.Length - 1);
             if (newstage != plant.currentStage)
             {
                 plant.currentStage = newstage;
-                plantTileMap.SetTile(position, plant.data.growStages[newstage]);
+                plantTileMap.SetTile(position, plant.data.seeds.growStages[newstage]);
             }
         }
     }
