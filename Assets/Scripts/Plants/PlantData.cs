@@ -9,6 +9,7 @@ public class PlantData : ScriptableObject
 
     public Sprite inventorySprite;
     public Location location = Location.Inventory;
+    public int HotBarSlot = -1;
     [TextArea(5, 15)]
     public String plantDetails;
     public int harvestYield = 2;

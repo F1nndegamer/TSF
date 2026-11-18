@@ -13,6 +13,8 @@ public enum ToolType
     Seeds,
     Sythe,
     UnTill,
+    Buy,
+    Sell,
 }
 public class TileUpdater : MonoBehaviour
 {
@@ -21,7 +23,8 @@ public class TileUpdater : MonoBehaviour
     private Vector3Int lastTilePosition = new Vector3Int(int.MinValue, int.MinValue);
     public PlantData selectedPlant; //TODO: This is just 1 plant for now
     public PlantData[] startPlants;
-    public Transform hotBarParent;
+    public Transform hotBarContainerParent;
+    public Transform hotBaritemParent;
     public Sprite activeSprite;
     public Sprite inActiveSprite;
     void Start()
@@ -75,45 +78,65 @@ public class TileUpdater : MonoBehaviour
         if (kb == null)
             return;
         if (kb.digit1Key.wasPressedThisFrame)
-
-            SelectTool(ToolType.Hoe);
+            SelectTool(1);
         if (kb.digit2Key.wasPressedThisFrame)
-            SelectTool(ToolType.Can);
+            SelectTool(2);
         if (kb.digit3Key.wasPressedThisFrame)
-            SelectTool(ToolType.Seeds);
+            SelectTool(3);
         if (kb.digit4Key.wasPressedThisFrame)
-            SelectTool(ToolType.Sythe);
+            SelectTool(4);
         if (kb.digit5Key.wasPressedThisFrame)
-            SelectTool(ToolType.UnTill);
+            SelectTool(5);
+        if (kb.digit6Key.wasPressedThisFrame)
+            SelectTool(6);
+        if (kb.digit7Key.wasPressedThisFrame)
+            SelectTool(7);
         if (kb.digit8Key.wasPressedThisFrame)
-            SelectTool(ToolType.Nothing);
+            SelectTool(8);
+        if (kb.digit9Key.wasPressedThisFrame)
+            SelectTool(9);
+        if (kb.digit0Key.wasPressedThisFrame)
+            SelectTool(0);
 
     }
-    private void SelectTool(ToolType tool)
+    private void SelectTool(int invIndex)
     {
-        selectedtool = tool;
-        foreach (Transform child in hotBarParent)
+        foreach (Transform child in hotBarContainerParent)
         {
             child.GetComponent<Image>().sprite = inActiveSprite;
         }
-        switch (selectedtool)
+        hotBarContainerParent.GetChild(invIndex).GetComponent<Image>().sprite = activeSprite;
+        //Lets find the tool
+        Transform item = hotBaritemParent.GetChild(invIndex);
+        HotBarSlot barSlot = item.GetComponent<HotBarSlot>();
+        switch(barSlot.function)
         {
-            case ToolType.Hoe:
-                hotBarParent.GetChild(0).GetComponent<Image>().sprite = activeSprite;
+            case Function.Hoe:
+                SelectToolType(ToolType.Hoe);
                 break;
-            case ToolType.Can:
-                hotBarParent.GetChild(1).GetComponent<Image>().sprite = activeSprite;
+            case Function.Can:
+                SelectToolType(ToolType.Can);
                 break;
-            case ToolType.Seeds:
-                hotBarParent.GetChild(2).GetComponent<Image>().sprite = activeSprite;
+            case Function.Sythe:
+                SelectToolType(ToolType.Sythe);
                 break;
-            case ToolType.Sythe:
-                hotBarParent.GetChild(3).GetComponent<Image>().sprite = activeSprite;
+            case Function.Untill:
+                SelectToolType(ToolType.UnTill);
                 break;
-            case ToolType.UnTill:
-                hotBarParent.GetChild(4).GetComponent<Image>().sprite = activeSprite;
+            case Function.Buy:
+                SelectToolType(ToolType.Buy);   //buy temp
+                break;
+            case Function.Sell:
+                SelectToolType(ToolType.Sell);  //sell temp
+                break;
+            case Function.Seeds:
+                SelectToolType(ToolType.Seeds);
+                selectedPlant = barSlot.plant
                 break;
         }
-
+    }
+    private void SelectToolType(ToolType tool)
+    {
+        selectedtool = tool;
     }
 }

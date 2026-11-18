@@ -25,6 +25,7 @@ public class Inventory : MonoBehaviour
     public Transform itemParent;
     public Transform containerParent;
     public GameObject slotPrefab;
+    public Transform hotbarpParent;
 
     public Transform tabParent;
     public Sprite activeTab;
@@ -119,17 +120,62 @@ public class Inventory : MonoBehaviour
             foreach (var kvp in dictionary)
             {
                 if (kvp.Value <= 0) continue;
-                if(itemCatagory == Tabs.Seeds) if(kvp.Key.seeds.location != Location.Inventory) continue;
-                if(itemCatagory == Tabs.Plants) if(kvp.Key.location != Location.Inventory) continue;
+                if (itemCatagory == Tabs.Seeds) if (kvp.Key.seeds.location != Location.Inventory) continue;
+                if (itemCatagory == Tabs.Plants) if (kvp.Key.location != Location.Inventory) continue;
                 GameObject slotObj = Instantiate(slotPrefab, itemParent);
                 activeSlots.Add(slotObj);
                 InventoryItem item = slotObj.GetComponent<InventoryItem>();
                 String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
-                
+
                 int slotNumber = -1;
-                for(int i = 0; i < itemParent.childCount; i++)
+                for (int i = 0; i < itemParent.childCount; i++)
                 {
-                    if(itemParent.GetChild(i).gameObject == slotObj)
+                    if (itemParent.GetChild(i).gameObject == slotObj)
+                    {
+                        slotNumber = i;
+                    }
+                }
+
+                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, slotNumber));
+                item.countText.text = kvp.Value.ToString();
+                item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
+            }
+        }
+        if (currentTab == Tabs.All || currentTab == Tabs.Seeds)
+        {
+            CreateSlots(seeds, Tabs.Seeds);
+        }
+        if (currentTab == Tabs.All || currentTab == Tabs.Plants)
+        {
+            CreateSlots(plants, Tabs.Plants);
+        }
+    }
+
+    public void InitialiseHotbar()
+    {
+        foreach (GameObject slot in activeSlots)
+        {
+            Destroy(slot);
+        }
+        activeSlots.Clear();
+        void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
+        {
+            if (currentTab != Tabs.All && currentTab != itemCatagory)
+                return;
+            foreach (var kvp in dictionary)
+            {
+                if (kvp.Value <= 0) continue;
+                if (itemCatagory == Tabs.Seeds) if (kvp.Key.seeds.location != Location.Inventory) continue;
+                if (itemCatagory == Tabs.Plants) if (kvp.Key.location != Location.Inventory) continue;
+                GameObject slotObj = Instantiate(slotPrefab, itemParent);
+                activeSlots.Add(slotObj);
+                InventoryItem item = slotObj.GetComponent<InventoryItem>();
+                String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
+
+                int slotNumber = -1;
+                for (int i = 0; i < itemParent.childCount; i++)
+                {
+                    if (itemParent.GetChild(i).gameObject == slotObj)
                     {
                         slotNumber = i;
                     }
@@ -151,7 +197,7 @@ public class Inventory : MonoBehaviour
     }
     public void ShowDetails(string details, int slotNumber)
     {
-        foreach(Transform child in containerParent)
+        foreach (Transform child in containerParent)
         {
             child.GetComponent<Image>().sprite = inactiveContainer;
         }
@@ -240,4 +286,58 @@ public class Inventory : MonoBehaviour
         return amount;
     }
     #endregion
+    public int GetNextHotBarSlot()
+    {
+        HashSet<int> occupied = new();
+        foreach (PlantData data in plants.Keys)
+        {
+            if (data.location == Location.hotBar)
+                occupied.Add(data.HotBarSlot);
+        }
+        foreach (PlantData data in seeds.Keys)
+        {
+            if (data.seeds.location == Location.hotBar)
+                occupied.Add(data.seeds.HotBarSlot);
+        }
+        for (int i = 0; i < hotbarpParent.childCount; i++)
+        {
+            if (!occupied.Contains(i))
+                return i;
+        }
+        return -1;
+    }
+    public void MoveSeedToHotBar(PlantData data)
+    {
+        if (data.seeds.location == Location.hotBar)
+            return;
+        int position = GetNextHotBarSlot();
+        if (position == -1)
+            return;
+        data.seeds.location = Location.hotBar;
+        data.seeds.HotBarSlot = position;
+        InitialiseInv();
+    }
+    public void MovePlantToHotBar(PlantData data)
+    {
+        if (data.location == Location.hotBar)
+            return;
+        int position = GetNextHotBarSlot();
+        if (position == -1)
+            return;
+        data.location = Location.hotBar;
+        data.HotBarSlot = position;
+        InitialiseInv();
+    }
+    public void MoveSeedToInv(PlantData data)
+    {
+        data.seeds.location = Location.Inventory;
+        data.seeds.HotBarSlot = -1;
+        InitialiseInv();
+    }
+    public void MovePlantToInv(PlantData data)
+    {
+        data.location = Location.Inventory;
+        data.HotBarSlot = -1;
+        InitialiseInv();
+    }
 }

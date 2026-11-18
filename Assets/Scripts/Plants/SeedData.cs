@@ -8,6 +8,7 @@ public class SeedData : ScriptableObject
 {
     public string SeedName;
     public Location location = Location.Inventory;
+    public int HotBarSlot = - 1;
     public float growthTime = 24f;
     // 0 is initial
     public TileBase[] growStages;
