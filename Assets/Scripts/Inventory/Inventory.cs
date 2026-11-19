@@ -40,6 +40,7 @@ public class Inventory : MonoBehaviour
     private List<Transform> itemSlots = new();
     private List<Transform> itemParents = new();
     public static Inventory instance;
+    private GameObject SelectedItem;
     private void Start()
     {
         foreach (PlantData data in TileUpdater.instance.startPlants)
@@ -201,6 +202,7 @@ public class Inventory : MonoBehaviour
         {
             child.GetComponent<Image>().sprite = inactiveContainer;
         }
+        SelectedItem = containerParent.GetChild(slotNumber).gameObject;
         containerParent.GetChild(slotNumber).GetComponent<Image>().sprite = activeContainer;
         DetailText.text = details;
     }
@@ -299,10 +301,13 @@ public class Inventory : MonoBehaviour
             if (data.seeds.location == Location.hotBar)
                 occupied.Add(data.seeds.HotBarSlot);
         }
-        for (int i = 0; i < hotbarpParent.childCount; i++)
+        List<int> empties = TileUpdater.instance.GetEmptySlots();
+        foreach (int noTool in empties)
         {
-            if (!occupied.Contains(i))
-                return i;
+            if (!occupied.Contains(noTool))
+            {
+                return noTool;
+            }
         }
         return -1;
     }

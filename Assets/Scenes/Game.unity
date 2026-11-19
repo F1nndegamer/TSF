@@ -5086,6 +5086,7 @@ GameObject:
   - component: {fileID: 427200693}
   - component: {fileID: 427200695}
   - component: {fileID: 427200694}
+  - component: {fileID: 427200696}
   m_Layer: 5
   m_Name: ItemContainer 5
   m_TagString: Untagged
@@ -5150,6 +5151,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427200692}
   m_CullTransparentMesh: 1
+--- !u!114 &427200696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427200692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &428505464
 GameObject:
   m_ObjectHideFlags: 0
@@ -6060,6 +6077,7 @@ MonoBehaviour:
   itemParent: {fileID: 431251672}
   containerParent: {fileID: 428505465}
   slotPrefab: {fileID: 4002072029003153824, guid: f5981f1da8e8c9a6da3f485eed2a8497, type: 3}
+  hotbarpParent: {fileID: 0}
   tabParent: {fileID: 1355927123}
   activeTab: {fileID: 21300000, guid: 28c342ce9b141b998a93ec108f5fa4fa, type: 3}
   inactiveTab: {fileID: 21300000, guid: fbc074267c538e17ba74d9105179089f, type: 3}
@@ -7021,7 +7039,8 @@ MonoBehaviour:
   startPlants:
   - {fileID: 11400000, guid: 0c5ee2ec015383e90bfcb37abc903d28, type: 2}
   - {fileID: 11400000, guid: 20e4f9cda39432effb01b9559ec53386, type: 2}
-  hotBarParent: {fileID: 2015522026}
+  hotBarContainerParent: {fileID: 2015522026}
+  hotBaritemParent: {fileID: 1807712628}
   activeSprite: {fileID: 21300000, guid: 2e39720d2e323561e9fef121eb38c03c, type: 3}
   inActiveSprite: {fileID: 21300000, guid: c5dfaa05c18f27150b60d7cef44d067d, type: 3}
 --- !u!1 &570042248
@@ -10253,6 +10272,7 @@ GameObject:
   - component: {fileID: 958259248}
   - component: {fileID: 958259250}
   - component: {fileID: 958259249}
+  - component: {fileID: 958259251}
   m_Layer: 5
   m_Name: ItemContainer 8
   m_TagString: Untagged
@@ -10317,6 +10337,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 958259247}
   m_CullTransparentMesh: 1
+--- !u!114 &958259251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958259247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &962988165
 GameObject:
   m_ObjectHideFlags: 0
@@ -11674,6 +11710,7 @@ GameObject:
   - component: {fileID: 1150677940}
   - component: {fileID: 1150677942}
   - component: {fileID: 1150677941}
+  - component: {fileID: 1150677943}
   m_Layer: 5
   m_Name: ItemContainer1
   m_TagString: Untagged
@@ -11738,6 +11775,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1150677939}
   m_CullTransparentMesh: 1
+--- !u!114 &1150677943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150677939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &1166804258
 GameObject:
   m_ObjectHideFlags: 0
@@ -13053,6 +13106,7 @@ GameObject:
   - component: {fileID: 1337726766}
   - component: {fileID: 1337726768}
   - component: {fileID: 1337726767}
+  - component: {fileID: 1337726769}
   m_Layer: 5
   m_Name: ItemContainer 4
   m_TagString: Untagged
@@ -13117,6 +13171,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1337726765}
   m_CullTransparentMesh: 1
+--- !u!114 &1337726769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337726765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &1344834795
 GameObject:
   m_ObjectHideFlags: 0
@@ -13270,6 +13340,7 @@ GameObject:
   - component: {fileID: 1356064590}
   - component: {fileID: 1356064592}
   - component: {fileID: 1356064591}
+  - component: {fileID: 1356064593}
   m_Layer: 5
   m_Name: ItemContainer3
   m_TagString: Untagged
@@ -13334,6 +13405,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1356064589}
   m_CullTransparentMesh: 1
+--- !u!114 &1356064593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356064589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &1357838675
 GameObject:
   m_ObjectHideFlags: 0
@@ -14300,6 +14387,7 @@ GameObject:
   - component: {fileID: 1480124687}
   - component: {fileID: 1480124689}
   - component: {fileID: 1480124688}
+  - component: {fileID: 1480124690}
   m_Layer: 5
   m_Name: ItemContainer 7
   m_TagString: Untagged
@@ -14364,6 +14452,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1480124686}
   m_CullTransparentMesh: 1
+--- !u!114 &1480124690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480124686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &1496056078
 GameObject:
   m_ObjectHideFlags: 0
@@ -15511,6 +15615,7 @@ GameObject:
   - component: {fileID: 1554821545}
   - component: {fileID: 1554821547}
   - component: {fileID: 1554821546}
+  - component: {fileID: 1554821548}
   m_Layer: 5
   m_Name: ItemContainer 6
   m_TagString: Untagged
@@ -15575,6 +15680,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1554821544}
   m_CullTransparentMesh: 1
+--- !u!114 &1554821548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554821544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &1563229488
 GameObject:
   m_ObjectHideFlags: 0
@@ -317032,6 +317153,7 @@ GameObject:
   - component: {fileID: 1774923023}
   - component: {fileID: 1774923025}
   - component: {fileID: 1774923024}
+  - component: {fileID: 1774923026}
   m_Layer: 5
   m_Name: ItemContainer2
   m_TagString: Untagged
@@ -317096,6 +317218,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1774923022}
   m_CullTransparentMesh: 1
+--- !u!114 &1774923026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774923022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &1802840029
 GameObject:
   m_ObjectHideFlags: 0
@@ -318641,6 +318779,7 @@ GameObject:
   - component: {fileID: 2000049469}
   - component: {fileID: 2000049471}
   - component: {fileID: 2000049470}
+  - component: {fileID: 2000049472}
   m_Layer: 5
   m_Name: ItemContainer 9
   m_TagString: Untagged
@@ -318705,6 +318844,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2000049468}
   m_CullTransparentMesh: 1
+--- !u!114 &2000049472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000049468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &2015298227
 GameObject:
   m_ObjectHideFlags: 0
@@ -319144,6 +319299,7 @@ GameObject:
   - component: {fileID: 2047853555}
   - component: {fileID: 2047853557}
   - component: {fileID: 2047853556}
+  - component: {fileID: 2047853558}
   m_Layer: 5
   m_Name: ItemContainer 10
   m_TagString: Untagged
@@ -319208,6 +319364,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047853554}
   m_CullTransparentMesh: 1
+--- !u!114 &2047853558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047853554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600663316e84e5c97e04b83d6ccfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotBarSlot
+  function: 0
+  data: {fileID: 0}
+  sprite: {fileID: 0}
+  index: 0
 --- !u!1 &2055210326
 GameObject:
   m_ObjectHideFlags: 0

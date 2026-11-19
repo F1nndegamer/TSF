@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor.Tilemaps;
 using UnityEditor.Toolbars;
 using UnityEngine;
@@ -27,9 +28,10 @@ public class TileUpdater : MonoBehaviour
     public Transform hotBaritemParent;
     public Sprite activeSprite;
     public Sprite inActiveSprite;
+    private HotBarSlot activeBarSlot;
     void Start()
     {
-        SelectTool(selectedtool);
+        SelectToolType(selectedtool);
     }
     void Awake()
     {
@@ -97,10 +99,22 @@ public class TileUpdater : MonoBehaviour
             SelectTool(9);
         if (kb.digit0Key.wasPressedThisFrame)
             SelectTool(0);
+        if (kb.fKey.wasPressedThisFrame)
+        {
+            if (activeBarSlot.function == Function.Seeds)
+            {
+                Inventory.instance.MoveSeedToInv(activeBarSlot.data);
+            }
+            if (activeBarSlot.function == Function.Plant)
+            {
+                Inventory.instance.MovePlantToInv(activeBarSlot.data);
+            }
+        }
 
     }
     private void SelectTool(int invIndex)
     {
+        invIndex = -1;
         foreach (Transform child in hotBarContainerParent)
         {
             child.GetComponent<Image>().sprite = inActiveSprite;
@@ -108,8 +122,8 @@ public class TileUpdater : MonoBehaviour
         hotBarContainerParent.GetChild(invIndex).GetComponent<Image>().sprite = activeSprite;
         //Lets find the tool
         Transform item = hotBaritemParent.GetChild(invIndex);
-        HotBarSlot barSlot = item.GetComponent<HotBarSlot>();
-        switch(barSlot.function)
+        activeBarSlot = item.GetComponent<HotBarSlot>();
+        switch (activeBarSlot.function)
         {
             case Function.Hoe:
                 SelectToolType(ToolType.Hoe);
@@ -131,9 +145,25 @@ public class TileUpdater : MonoBehaviour
                 break;
             case Function.Seeds:
                 SelectToolType(ToolType.Seeds);
-                selectedPlant = barSlot.plant
+                selectedPlant = activeBarSlot.data;
+                break;
+            case Function.Nothing:
+                SelectToolType(ToolType.Nothing);
                 break;
         }
+    }
+    public List<int> GetEmptySlots()
+    {
+        List<int> empties = new();
+        for (int i = 0; i < hotBaritemParent.childCount; i++)
+        {
+            Transform item = hotBaritemParent.GetChild(i);
+            HotBarSlot barSlot = item.GetComponent<HotBarSlot>();
+            if (barSlot.function == Function.Nothing)
+                empties.Add(i);
+        }
+
+        return empties;
     }
     private void SelectToolType(ToolType tool)
     {

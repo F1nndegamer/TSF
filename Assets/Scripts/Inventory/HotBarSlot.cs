@@ -10,6 +10,7 @@ public enum Function
     Sell,
     Buy,
     Plant,
+    Nothing,
 }
 public class HotBarSlot : MonoBehaviour
 {

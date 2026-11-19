@@ -243,7 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
   Sprite: {fileID: 3237948424738530267}
   countText: {fileID: 3308811309537321797}
-  inventoryPosition: 2
+  inventoryPosition: -1
 --- !u!1 &7661179267027637468
 GameObject:
   m_ObjectHideFlags: 0

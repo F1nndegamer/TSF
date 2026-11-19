@@ -5,5 +5,4 @@ public class InventoryItem : MonoBehaviour
 {
     public Image Sprite;
     public TextMeshProUGUI countText;
-    public int inventoryPosition;
 }
