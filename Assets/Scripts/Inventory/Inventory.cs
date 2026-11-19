@@ -18,7 +18,6 @@ public enum Tabs
 }
 public class Inventory : MonoBehaviour
 {
-    public int money = 0;
     public TextMeshProUGUI moneyText;
     public GameObject inventoryPanel;
     public TextMeshProUGUI DetailText;
@@ -45,10 +44,6 @@ public class Inventory : MonoBehaviour
     public PlantData SelectedPlantData;
     private void Start()
     {
-        foreach (PlantData data in TileUpdater.instance.startPlants)
-        {
-            AddSeeds(data, 2);
-        }
         tabParent.GetChild(0).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.All));
         tabParent.GetChild(1).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Seeds));
         tabParent.GetChild(2).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Plants));
@@ -105,21 +100,24 @@ public class Inventory : MonoBehaviour
         int amount = TryGetPlant(data);
         if (amount <= 0)
             return;
-        money += amount * data.sellPrice;
+        GameManager.Money += amount * data.sellPrice;
         SetPlant(data, 0);
-        string formatted = money.ToString("D3");
-        moneyText.text = formatted + "g";
+        RefreshMoney();
     }
     private void BuySeeds(PlantData data)
     {
         if (data.seeds.seedCost <= 0)
             return;
-        int amount = money / data.seeds.seedCost;
+        int amount = GameManager.Money / data.seeds.seedCost;
         if (amount <= 0)
             return;
         AddSeeds(data, amount);
-        money -= amount * data.seeds.seedCost;
-        string formatted = money.ToString("D3");
+        GameManager.Money -= amount * data.seeds.seedCost;
+        RefreshMoney();
+    }
+    public void RefreshMoney()
+    {
+        string formatted = GameManager.Money.ToString("D3");
         moneyText.text = formatted + "g";
     }
     public void InitialiseInv()

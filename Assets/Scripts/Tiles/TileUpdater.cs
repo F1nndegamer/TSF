@@ -23,7 +23,6 @@ public class TileUpdater : MonoBehaviour
     public ToolType selectedtool = ToolType.Hoe;
     private Vector3Int lastTilePosition = new Vector3Int(int.MinValue, int.MinValue);
     public PlantData selectedPlant;
-    public PlantData[] startPlants;
     public Transform hotBarContainerParent;
     public Transform hotBaritemParent;
     public Sprite activeSprite;

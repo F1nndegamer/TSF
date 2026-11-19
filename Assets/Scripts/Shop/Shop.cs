@@ -39,6 +39,9 @@ public class Shop : MonoBehaviour
     }
     void Start()
     {
+        GameManager.Money = 10;
+        RefreshMoneyUI();
+        Inventory.instance.RefreshMoney();
         if (closeButton != null)
             closeButton.onClick.AddListener(() => SetShopOpen(false));
         if (buyTabButton != null)
@@ -119,7 +122,7 @@ public class Shop : MonoBehaviour
         if (!IsSellingMode)
         {
             if (SelectedItem.buyPrice <= 0) return 99;
-            return Mathf.Max(1, Inventory.instance.money / SelectedItem.buyPrice);
+            return Mathf.Max(1, GameManager.Money / SelectedItem.buyPrice);
         }
         else
         {
@@ -158,7 +161,7 @@ public class Shop : MonoBehaviour
         confirmButtonLabel.text = IsSellingMode ? "SELL" : "BUY";
         if (!IsSellingMode)
         {
-            confirmButton.interactable = Inventory.instance.money >= totalPrice && unitPrice >= 0;
+            confirmButton.interactable = GameManager.Money >= totalPrice && unitPrice >= 0;
         }
         else
         {
@@ -179,18 +182,18 @@ public class Shop : MonoBehaviour
     }
     public void ConfirmTransaction()
     {
-        if(SelectedItem == null || SelectedItem.plantData == null)
+        if (SelectedItem == null || SelectedItem.plantData == null)
             return;
 
         PlantData pData = SelectedItem.plantData;
         bool isSeed = SelectedItem.sellsSeeds;
-        if(!IsSellingMode)
+        if (!IsSellingMode)
         {
             int cost = SelectedItem.buyPrice * Quantity;
-            if(Inventory.instance.money < cost)
+            if (GameManager.Money < cost)
                 return;
-            Inventory.instance.money -= cost;
-            if(isSeed)
+            GameManager.Money -= cost;
+            if (isSeed)
                 Inventory.instance.AddSeeds(pData, Quantity);
             else
                 Inventory.instance.AddPlant(pData, Quantity);
@@ -198,29 +201,29 @@ public class Shop : MonoBehaviour
         else
         {
             int owned = isSeed ? Inventory.instance.TryGetSeeds(pData) : Inventory.instance.TryGetPlant(pData);
-            if(owned < Quantity)
+            if (owned < Quantity)
                 return;
-            if(isSeed)
+            if (isSeed)
                 Inventory.instance.RemoveSeeds(pData, Quantity);
             else
                 Inventory.instance.RemovePlant(pData, Quantity);
-            Inventory.instance.money += SelectedItem.sellPrice * Quantity;
+            GameManager.Money += SelectedItem.sellPrice * Quantity;
         }
         RefreshMoneyUI();
         RefreshDetails();
-        if(GameManager.IsInventoryOpen && Inventory.instance.inventoryPanel.activeSelf)
+        if (GameManager.IsInventoryOpen && Inventory.instance.inventoryPanel.activeSelf)
         {
             Inventory.instance.InitialiseInv();
         }
     }
     public void RefreshMoneyUI()
     {
-        string formatted = Inventory.instance.money.ToString("D3") + "g";
-        if(moneyText != null)
+        string formatted = GameManager.Money.ToString("D3") + "g";
+        if (moneyText != null)
             moneyText.text = formatted;
-        if(Inventory.instance.moneyText != null)
+        if (moneyText != null)
         {
-            Inventory.instance.moneyText.text = formatted;
+            moneyText.text = formatted;
         }
     }
 }
