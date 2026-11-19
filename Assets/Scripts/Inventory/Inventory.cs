@@ -41,6 +41,8 @@ public class Inventory : MonoBehaviour
     private List<Transform> itemParents = new();
     public static Inventory instance;
     private GameObject SelectedItem;
+    private bool SelectedSeeds;
+    public PlantData SelectedPlantData;
     private void Start()
     {
         foreach (PlantData data in TileUpdater.instance.startPlants)
@@ -73,6 +75,19 @@ public class Inventory : MonoBehaviour
         if (kb.eKey.wasPressedThisFrame)
         {
             switchInventory();
+        }
+        if (kb.rKey.wasPressedThisFrame)
+        {
+
+            //Either add seeds or plant to Hotbar, we gotta figure out which one we have selected first, than either call movePlants or moveSeeds to hotbar
+            if (SelectedSeeds)
+            {
+                MoveSeedToHotBar(SelectedPlantData);
+            }
+            else
+            {
+                MovePlantToHotBar(SelectedPlantData);
+            }
         }
     }
     public void switchInventory()
@@ -109,10 +124,13 @@ public class Inventory : MonoBehaviour
     }
     public void InitialiseInv()
     {
-        foreach (GameObject slot in activeSlots)
+        while (itemParent.childCount > 0)
         {
-            Destroy(slot);
+            DestroyImmediate(itemParent.GetChild(0).gameObject);
         }
+
+        Debug.Log("Remaining children: " + itemParent.childCount);
+        Debug.Log("OOOH" + itemParent.childCount); //This now outputs 1, instead of 2, but should be 0
         activeSlots.Clear();
         void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
         {
@@ -123,7 +141,9 @@ public class Inventory : MonoBehaviour
                 if (kvp.Value <= 0) continue;
                 if (itemCatagory == Tabs.Seeds) if (kvp.Key.seeds.location != Location.Inventory) continue;
                 if (itemCatagory == Tabs.Plants) if (kvp.Key.location != Location.Inventory) continue;
+                Debug.Log("AAAAh" + itemParent.childCount);
                 GameObject slotObj = Instantiate(slotPrefab, itemParent);
+                Debug.Log("Added");
                 activeSlots.Add(slotObj);
                 InventoryItem item = slotObj.GetComponent<InventoryItem>();
                 String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
@@ -131,13 +151,15 @@ public class Inventory : MonoBehaviour
                 int slotNumber = -1;
                 for (int i = 0; i < itemParent.childCount; i++)
                 {
+                    Debug.Log(itemParent.childCount);
                     if (itemParent.GetChild(i).gameObject == slotObj)
                     {
-                        slotNumber = i;
+                        slotNumber = i; //Seems to be incorrect after 2nd iteration of inventory
+                        //Debug.Log(slotNumber);
                     }
                 }
 
-                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, slotNumber));
+                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, slotNumber, itemCatagory.ToString(), kvp.Key));
                 item.countText.text = kvp.Value.ToString();
                 item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
             }
@@ -150,53 +172,10 @@ public class Inventory : MonoBehaviour
         {
             CreateSlots(plants, Tabs.Plants);
         }
+        TileUpdater.instance.DrawHotBar();
     }
 
-    public void InitialiseHotbar()
-    {
-        foreach (GameObject slot in activeSlots)
-        {
-            Destroy(slot);
-        }
-        activeSlots.Clear();
-        void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
-        {
-            if (currentTab != Tabs.All && currentTab != itemCatagory)
-                return;
-            foreach (var kvp in dictionary)
-            {
-                if (kvp.Value <= 0) continue;
-                if (itemCatagory == Tabs.Seeds) if (kvp.Key.seeds.location != Location.Inventory) continue;
-                if (itemCatagory == Tabs.Plants) if (kvp.Key.location != Location.Inventory) continue;
-                GameObject slotObj = Instantiate(slotPrefab, itemParent);
-                activeSlots.Add(slotObj);
-                InventoryItem item = slotObj.GetComponent<InventoryItem>();
-                String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
-
-                int slotNumber = -1;
-                for (int i = 0; i < itemParent.childCount; i++)
-                {
-                    if (itemParent.GetChild(i).gameObject == slotObj)
-                    {
-                        slotNumber = i;
-                    }
-                }
-
-                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, slotNumber));
-                item.countText.text = kvp.Value.ToString();
-                item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
-            }
-        }
-        if (currentTab == Tabs.All || currentTab == Tabs.Seeds)
-        {
-            CreateSlots(seeds, Tabs.Seeds);
-        }
-        if (currentTab == Tabs.All || currentTab == Tabs.Plants)
-        {
-            CreateSlots(plants, Tabs.Plants);
-        }
-    }
-    public void ShowDetails(string details, int slotNumber)
+    public void ShowDetails(string details, int slotNumber, string plantOrSeed, PlantData data)
     {
         foreach (Transform child in containerParent)
         {
@@ -205,6 +184,10 @@ public class Inventory : MonoBehaviour
         SelectedItem = containerParent.GetChild(slotNumber).gameObject;
         containerParent.GetChild(slotNumber).GetComponent<Image>().sprite = activeContainer;
         DetailText.text = details;
+
+        SelectedSeeds = plantOrSeed == "Seeds";
+        SelectedPlantData = data;
+        Debug.Log(plantOrSeed);
     }
     public void SwitchTabs(Tabs tab)
     {
@@ -316,10 +299,16 @@ public class Inventory : MonoBehaviour
         if (data.seeds.location == Location.hotBar)
             return;
         int position = GetNextHotBarSlot();
+        Debug.Log(position);
         if (position == -1)
             return;
+        Debug.Log(position);
+        Debug.Log("Checks successful!");
         data.seeds.location = Location.hotBar;
         data.seeds.HotBarSlot = position;
+        TileUpdater.instance.barslots[position].function = Function.Seeds;
+        TileUpdater.instance.barslots[position].data = data;
+        TileUpdater.instance.barslots[position].sprite = data.seeds.seedinventorySprite;
         InitialiseInv();
     }
     public void MovePlantToHotBar(PlantData data)
@@ -331,17 +320,29 @@ public class Inventory : MonoBehaviour
             return;
         data.location = Location.hotBar;
         data.HotBarSlot = position;
+        TileUpdater.instance.barslots[position].function = Function.Plant;
+        TileUpdater.instance.barslots[position].data = data;
+        TileUpdater.instance.barslots[position].sprite = data.inventorySprite;
         InitialiseInv();
     }
     public void MoveSeedToInv(PlantData data)
     {
+        int correctedSlot = data.seeds.HotBarSlot + 1; //Temp fix
         data.seeds.location = Location.Inventory;
+        TileUpdater.instance.barslots[correctedSlot].function = Function.Nothing;
+        TileUpdater.instance.barslots[correctedSlot].data = data;
+        TileUpdater.instance.barslots[correctedSlot].sprite = null;
         data.seeds.HotBarSlot = -1;
         InitialiseInv();
     }
+
     public void MovePlantToInv(PlantData data)
     {
+        int correctedSlot = data.HotBarSlot + 1;
         data.location = Location.Inventory;
+        TileUpdater.instance.barslots[correctedSlot].function = Function.Nothing;
+        TileUpdater.instance.barslots[correctedSlot].data = data;
+        TileUpdater.instance.barslots[correctedSlot].sprite = null;
         data.HotBarSlot = -1;
         InitialiseInv();
     }

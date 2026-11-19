@@ -22,16 +22,23 @@ public class TileUpdater : MonoBehaviour
     public static TileUpdater instance;
     public ToolType selectedtool = ToolType.Hoe;
     private Vector3Int lastTilePosition = new Vector3Int(int.MinValue, int.MinValue);
-    public PlantData selectedPlant; //TODO: This is just 1 plant for now
+    public PlantData selectedPlant;
     public PlantData[] startPlants;
     public Transform hotBarContainerParent;
     public Transform hotBaritemParent;
     public Sprite activeSprite;
     public Sprite inActiveSprite;
+    public List<HotBarSlot> barslots = new();
     private HotBarSlot activeBarSlot;
     void Start()
     {
         SelectToolType(selectedtool);
+        DrawHotBar();
+        foreach (Transform child in hotBaritemParent)
+        {
+            HotBarSlot slot = child.GetComponent<HotBarSlot>();
+            barslots.Add(slot);
+        }
     }
     void Awake()
     {
@@ -101,12 +108,21 @@ public class TileUpdater : MonoBehaviour
             SelectTool(0);
         if (kb.fKey.wasPressedThisFrame)
         {
+            Debug.Log("HB F key");
+            if (GameManager.IsInventoryOpen)
+            {
+                Debug.Log("InvOpen");
+                return;
+            }
             if (activeBarSlot.function == Function.Seeds)
             {
+                Debug.Log("IsSeeds");
                 Inventory.instance.MoveSeedToInv(activeBarSlot.data);
+
             }
             if (activeBarSlot.function == Function.Plant)
             {
+                Debug.Log("IsPlant");
                 Inventory.instance.MovePlantToInv(activeBarSlot.data);
             }
         }
@@ -114,7 +130,11 @@ public class TileUpdater : MonoBehaviour
     }
     private void SelectTool(int invIndex)
     {
-        invIndex = -1;
+        invIndex -= 1;
+        if (invIndex == -1)
+        {
+            invIndex = 9;
+        }
         foreach (Transform child in hotBarContainerParent)
         {
             child.GetComponent<Image>().sprite = inActiveSprite;
@@ -159,11 +179,47 @@ public class TileUpdater : MonoBehaviour
         {
             Transform item = hotBaritemParent.GetChild(i);
             HotBarSlot barSlot = item.GetComponent<HotBarSlot>();
+            if (barSlot == null)
+                Debug.Log(" No Component");
             if (barSlot.function == Function.Nothing)
+            {
+
                 empties.Add(i);
+            }
+            else
+            {
+                Debug.Log(barSlot.function);
+            }
         }
 
         return empties;
+    }
+    public void DrawHotBar()
+    {
+        for (int i = 0; i < hotBaritemParent.childCount; i++)
+        {
+            int hotbarIndex = -1;
+            hotbarIndex = i - 1;
+            if (hotbarIndex == -1)
+            {
+                hotbarIndex = 9; //pos 10
+            }
+            Transform child = hotBaritemParent.GetChild(i);
+            HotBarSlot barslot = child.GetComponent<HotBarSlot>();
+
+            child.GetComponent<Image>().sprite = barslot.sprite;
+
+            if (barslot.function == Function.Plant)
+            {
+                barslot.data.HotBarSlot = hotbarIndex;
+                barslot.sprite = barslot.data.inventorySprite;
+            }
+            if (barslot.function == Function.Seeds)
+            {
+                barslot.data.seeds.HotBarSlot = hotbarIndex;
+                barslot.sprite = barslot.data.seeds.seedinventorySprite;
+            }
+        }
     }
     private void SelectToolType(ToolType tool)
     {
