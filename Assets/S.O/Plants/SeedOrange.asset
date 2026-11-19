@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SeedData
   SeedName: SeedGreen
   location: 0
-  HotBarSlot: 6
+  HotBarSlot: 5
   growthTime: 24
   growStages:
   - {fileID: 11400000, guid: 09e4d2d9534f452fa86f57a2d7f6aa48, type: 2}

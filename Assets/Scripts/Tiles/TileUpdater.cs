@@ -126,7 +126,6 @@ public class TileUpdater : MonoBehaviour
                 Inventory.instance.MovePlantToInv(activeBarSlot.data);
             }
         }
-
     }
     private void SelectTool(int invIndex)
     {
@@ -158,10 +157,10 @@ public class TileUpdater : MonoBehaviour
                 SelectToolType(ToolType.UnTill);
                 break;
             case Function.Buy:
-                SelectToolType(ToolType.Buy);   //buy temp
+                Shop.instance.ToggleShop();
                 break;
             case Function.Sell:
-                SelectToolType(ToolType.Sell);  //sell temp
+                Shop.instance.ToggleShop();
                 break;
             case Function.Seeds:
                 SelectToolType(ToolType.Seeds);
@@ -208,7 +207,14 @@ public class TileUpdater : MonoBehaviour
             HotBarSlot barslot = child.GetComponent<HotBarSlot>();
 
             child.GetComponent<Image>().sprite = barslot.sprite;
-
+            if (barslot.sprite == null)
+            {
+                child.GetComponent<Image>().color = Color.clear;
+            }
+            else
+            {
+                child.GetComponent<Image>().color = Color.white;
+            }
             if (barslot.function == Function.Plant)
             {
                 barslot.data.HotBarSlot = hotbarIndex;

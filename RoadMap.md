@@ -31,7 +31,7 @@ Now that the grid works, I can start making the actual farm.
 - Display the correct appearance for each soil state. DONE
 - Prevent interactions with tiles that shouldn't be usable. DONE
 
-# 3. Get crops working ONGOING
+# 3. Get crops working DONE
 
 - Add a way to plant seeds. DONE
 - Make sure seeds can only be planted in suitable soil. DONE
@@ -51,9 +51,9 @@ The first crop will be the turnip: Kinda done IG
 - Seed cost: 1.
 - Harvest yield: 2 turnips.
 
-# 4. Add an inventory
+# 4. Add an inventory DONE
 
-- Create an inventory system. (1 item DONE)
+- Create an inventory system. DONE
 - Add and remove items. DONE
 - Keep track of item quantities. DONE
 - Display the inventory on screen. DONE
@@ -63,7 +63,7 @@ The first crop will be the turnip: Kinda done IG
 - Make harvesting add crops. DONE
 - Handle items that the player doesn't have enough of. DONE
 
-# 5. Make adding new crops easier
+# 5. Make adding new crops easier DONE
 
 - Its name and description.
 - Its seed item.
@@ -78,11 +78,11 @@ Tasks:
 - Create a CropDefinition. DONE
 - Create a way to keep track of all available crops.
 - Move the turnip's information into a CropDefinition. DONE
-- Make sure the farming system works with different crop definitions. NEXT
-- Add a few more crops to test it.
-- Make sure adding a crop doesn't require changing the farming system itself.
+- Make sure the farming system works with different crop definitions. DONE
+- Add a few more crops to test it. DONE
+- Make sure adding a crop doesn't require changing the farming system itself. DONE
 
-# 6. Add the botanical journal
+# 6. Add the botanical journal NEXT
 
 - Create the journal interface.
 - Display discovered crops.
