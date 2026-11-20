@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Tilemaps;
 using UnityEditor.Toolbars;
 using UnityEngine;
+using UnityEngine.Categorization;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -39,6 +40,7 @@ public class TileUpdater : MonoBehaviour
             barslots.Add(slot);
         }
     }
+
     void Awake()
     {
         instance = this;
@@ -107,21 +109,16 @@ public class TileUpdater : MonoBehaviour
             SelectTool(0);
         if (kb.fKey.wasPressedThisFrame)
         {
-            Debug.Log("HB F key");
             if (GameManager.IsInventoryOpen)
-            {
-                Debug.Log("InvOpen");
                 return;
-            }
+            
             if (activeBarSlot.function == Function.Seeds)
             {
-                Debug.Log("IsSeeds");
                 Inventory.instance.MoveSeedToInv(activeBarSlot.data);
 
             }
             if (activeBarSlot.function == Function.Plant)
             {
-                Debug.Log("IsPlant");
                 Inventory.instance.MovePlantToInv(activeBarSlot.data);
             }
         }
@@ -196,16 +193,64 @@ public class TileUpdater : MonoBehaviour
     {
         for (int i = 0; i < hotBaritemParent.childCount; i++)
         {
-            int hotbarIndex = -1;
-            hotbarIndex = i - 1;
-            if (hotbarIndex == -1)
-            {
-                hotbarIndex = 9; //pos 10
-            }
             Transform child = hotBaritemParent.GetChild(i);
             HotBarSlot barslot = child.GetComponent<HotBarSlot>();
+            Image slotImage = child.GetComponent<Image>();
+            
+            int count = 0;
+            bool showCount = false;
 
-            child.GetComponent<Image>().sprite = barslot.sprite;
+            if (barslot.function == Function.Seeds)
+            {
+                if(barslot.data == null || Inventory.instance == null)
+                {
+                    barslot.ClearSlot();
+                }
+                else
+                {
+                    count = Inventory.instance.TryGetSeeds(barslot.data);
+                    if(count <= 0)
+                    {
+                        barslot.data.seeds.location = Location.Inventory;
+                        barslot.data.seeds.HotBarSlot = -1;
+                        barslot.ClearSlot();
+                        if(selectedtool == ToolType.Seeds && selectedPlant == barslot.data)
+                            SelectToolType(ToolType.Nothing);
+                        
+                    }
+                    else
+                    {
+                        barslot.data.seeds.HotBarSlot = i;
+                        barslot.sprite = barslot.data.seeds.seedinventorySprite;
+                        showCount = true;
+                    }
+                }
+            }
+            if (barslot.function == Function.Plant)
+            {
+                if (barslot.data == null || Inventory.instance == null)
+                {
+                    barslot.ClearSlot();
+                }
+                else
+                {
+                    count = Inventory.instance.TryGetPlant(barslot.data);
+                    if (count <= 0)
+                    {
+                        barslot.data.location = Location.Inventory;
+                        barslot.data.HotBarSlot = -1;
+                        barslot.ClearSlot();
+                    }
+                    else
+                    {
+                        barslot.data.seeds.HotBarSlot = i;
+                        barslot.sprite = barslot.data.inventorySprite;
+                        showCount = true;
+                    }
+                }
+            }
+
+            slotImage.sprite = barslot.sprite;
             if (barslot.sprite == null)
             {
                 child.GetComponent<Image>().color = Color.clear;
@@ -214,15 +259,12 @@ public class TileUpdater : MonoBehaviour
             {
                 child.GetComponent<Image>().color = Color.white;
             }
-            if (barslot.function == Function.Plant)
+
+            if(barslot.count != null)
             {
-                barslot.data.HotBarSlot = hotbarIndex;
-                barslot.sprite = barslot.data.inventorySprite;
-            }
-            if (barslot.function == Function.Seeds)
-            {
-                barslot.data.seeds.HotBarSlot = hotbarIndex;
-                barslot.sprite = barslot.data.seeds.seedinventorySprite;
+                barslot.count.enabled = showCount;
+                if(showCount)
+                    barslot.count.text = count.ToString();
             }
         }
     }

@@ -122,13 +122,11 @@ public class Inventory : MonoBehaviour
     }
     public void InitialiseInv()
     {
-        while (itemParent.childCount > 0)
+        for(int i = itemParent.childCount - 1; i >= 0; i--)
         {
-            DestroyImmediate(itemParent.GetChild(0).gameObject);
+            Destroy(itemParent.GetChild(i).gameObject);
         }
 
-        Debug.Log("Remaining children: " + itemParent.childCount);
-        Debug.Log("OOOH" + itemParent.childCount); //This now outputs 1, instead of 2, but should be 0
         activeSlots.Clear();
         void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
         {
@@ -152,8 +150,7 @@ public class Inventory : MonoBehaviour
                     Debug.Log(itemParent.childCount);
                     if (itemParent.GetChild(i).gameObject == slotObj)
                     {
-                        slotNumber = i; //Seems to be incorrect after 2nd iteration of inventory
-                        //Debug.Log(slotNumber);
+                        slotNumber = i;
                     }
                 }
 
@@ -225,11 +222,14 @@ public class Inventory : MonoBehaviour
     {
         plants.TryGetValue(data, out int current);
         plants[data] = current + amount;
+        Journal.instance.DiscoverCrop(data);
+        TileUpdater.instance.DrawHotBar();
     }
     public void RemovePlant(PlantData data, int amount)
     {
         int current = TryGetPlant(data);
         plants[data] = current - amount;
+        TileUpdater.instance.DrawHotBar();
     }
     public void SetPlant(PlantData data, int amount)
     {
@@ -248,12 +248,14 @@ public class Inventory : MonoBehaviour
     {
         seeds.TryGetValue(data, out int current);
         seeds[data] = current + amount;
+        TileUpdater.instance.DrawHotBar();
     }
     public void RemoveSeeds(PlantData data, int amount)
     {
         int current = TryGetSeeds(data);
         Debug.Log(current + " - " + amount + " = " + (current - amount));
         seeds[data] = current - amount;
+        TileUpdater.instance.DrawHotBar();
     }
     public void SetSeed(PlantData data, int amount)
     {
@@ -300,8 +302,6 @@ public class Inventory : MonoBehaviour
         Debug.Log(position);
         if (position == -1)
             return;
-        Debug.Log(position);
-        Debug.Log("Checks successful!");
         data.seeds.location = Location.hotBar;
         data.seeds.HotBarSlot = position;
         TileUpdater.instance.barslots[position].function = Function.Seeds;
@@ -325,23 +325,25 @@ public class Inventory : MonoBehaviour
     }
     public void MoveSeedToInv(PlantData data)
     {
-        int correctedSlot = data.seeds.HotBarSlot + 1; //Temp fix
+        int slotIndex = data.seeds.HotBarSlot;
         data.seeds.location = Location.Inventory;
-        TileUpdater.instance.barslots[correctedSlot].function = Function.Nothing;
-        TileUpdater.instance.barslots[correctedSlot].data = data;
-        TileUpdater.instance.barslots[correctedSlot].sprite = null;
         data.seeds.HotBarSlot = -1;
+        if (slotIndex >= 0 && slotIndex < TileUpdater.instance.barslots.Count)
+            TileUpdater.instance.barslots[slotIndex].ClearSlot();
+        TileUpdater.instance.DrawHotBar();
         InitialiseInv();
     }
 
     public void MovePlantToInv(PlantData data)
     {
-        int correctedSlot = data.HotBarSlot + 1;
+        int slotIndex = data.HotBarSlot;
         data.location = Location.Inventory;
-        TileUpdater.instance.barslots[correctedSlot].function = Function.Nothing;
-        TileUpdater.instance.barslots[correctedSlot].data = data;
-        TileUpdater.instance.barslots[correctedSlot].sprite = null;
         data.HotBarSlot = -1;
+
+        if (slotIndex >= 0 && slotIndex < TileUpdater.instance.barslots.Count)
+            TileUpdater.instance.barslots[slotIndex].ClearSlot();
+
+        TileUpdater.instance.DrawHotBar();
         InitialiseInv();
     }
 }
