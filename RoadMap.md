@@ -92,6 +92,18 @@ Tasks:
 - Add descriptions and other information to crop entries. DONE
 - Make discovering a new crop feel rewarding. DONE
 
+# Playtester feedback
+
+- Sell/Buy difference is unclear,
+- Grow finished unclear at first,
+- Got free seeds ?!?,
+- Inventory hotbar changes unclear,
+- More content needed,
+- Max button in shop to sell/buy,
+- Incorrect slot selected in Inventory sometimes, (Should be each click/ opening),
+- Cant select empty slots,
+- Water fade in would be cool,
+
 # 7. Add crop experimentation and alchemy NEXT
 
 - Decide how crop combinations should work.
@@ -102,6 +114,14 @@ Tasks:
 - Add discovered results to the botanical journal.
 - Make sure combinations aren't completely random or impossible to figure out.
 - 2 Types of experiment results: New species, and New types.
+- New species are like pumpkins, turnips
+- New types are like orange turnips or modified turnips with quicker grow time
+- Recipe book
+- To get more of the new crop, use the recipe book/ crafting menu seperate from experimenting
+- A lot should be procedural
+- I want to make a massive tree graph of all plants, multiple combinations can give same result,
+- Hint for Journal items, like BuyInShop or a sweet veggetable
+- Make tile store water amount, not just binary (could be another mutation)
 
 # 8. Expand the world
 

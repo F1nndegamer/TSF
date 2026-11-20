@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
-using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.Categorization;
 using UnityEngine.InputSystem;
