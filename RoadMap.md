@@ -82,17 +82,17 @@ Tasks:
 - Add a few more crops to test it. DONE
 - Make sure adding a crop doesn't require changing the farming system itself. DONE
 
-# 6. Add the botanical journal NEXT
+# 6. Add the botanical journal DONE
 
-- Create the journal interface.
-- Display discovered crops.
-- Show information about each crop.
-- Keep track of which crops the player has discovered.
-- Show undiscovered entries without revealing everything.
-- Add descriptions and other information to crop entries.
-- Make discovering a new crop feel rewarding.
+- Create the journal interface. DONE
+- Display discovered crops. DONE
+- Show information about each crop. DONE
+- Keep track of which crops the player has discovered. DONE
+- Show undiscovered entries without revealing everything. DONE
+- Add descriptions and other information to crop entries. DONE
+- Make discovering a new crop feel rewarding. DONE
 
-# 7. Add crop experimentation and alchemy
+# 7. Add crop experimentation and alchemy NEXT
 
 - Decide how crop combinations should work.
 - Create a system for defining combinations.
@@ -101,6 +101,7 @@ Tasks:
 - Make unsuccessful experiments give useful feedback.
 - Add discovered results to the botanical journal.
 - Make sure combinations aren't completely random or impossible to figure out.
+- 2 Types of experiment results: New species, and New types.
 
 # 8. Expand the world
 

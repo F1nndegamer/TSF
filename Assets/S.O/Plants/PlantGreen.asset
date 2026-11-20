@@ -15,31 +15,8 @@ MonoBehaviour:
   plantName: GreenPlant
   inventorySprite: {fileID: 21300000, guid: e6e58f3abd10e839e9ea7c87c66a2058, type: 3}
   location: 0
-  plantDetails: 'Green Turnip
-
-    Type: Crop
-
-    Season: Spring
-
-    Quality: Normal
-
-    Sell: 60g
-
-    Energy: +25
-
-    Health: +10
-
-    Edible: Yes
-
-    Use: Cooking
-
-    Origin: Farm
-
-    Rarity: Common
-
-    Stack: 99 Max
-
-    Crisp and sweet.'
+  HotBarSlot: -1
+  plantDetails: Green Turnip
   harvestYield: 2
   seeds: {fileID: 11400000, guid: ab9522aed48b17bc2b68f145bf3ed481, type: 2}
   sellPrice: 2

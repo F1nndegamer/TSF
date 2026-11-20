@@ -124,9 +124,10 @@ public class Inventory : MonoBehaviour
     {
         for(int i = itemParent.childCount - 1; i >= 0; i--)
         {
-            Destroy(itemParent.GetChild(i).gameObject);
+            GameObject childobj = itemParent.GetChild(i).gameObject;
+            childobj.SetActive(false);
+            Destroy(childobj);
         }
-
         activeSlots.Clear();
         void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
         {
