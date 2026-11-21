@@ -53,6 +53,10 @@ public class Inventory : MonoBehaviour
     {
         instance = this;
     }
+    public Dictionary<PlantData, int> GetAllPlants()
+    {
+        return plants;
+    }
     private void Update()
     {
         //TODO: Actual selling mechanics, for now, just one plant, the temp one in TileUpdater
