@@ -39,7 +39,7 @@ public class Shop : MonoBehaviour
     }
     void Start()
     {
-        GameManager.Money = 10;
+        GameManager.Money = 1000;
         RefreshMoneyUI();
         Inventory.instance.RefreshMoney();
         if (closeButton != null)

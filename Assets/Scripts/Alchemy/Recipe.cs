@@ -19,7 +19,7 @@ public enum VarientModifier
 public class Recipe : ScriptableObject
 {
     public string recipeName;
-    public ExperimentResultType resultType = ExperimentResultType.NewSpecies;
+    public ExperimentResultType resultType = ExperimentResultType.NewTypeVarient;
 
     public PlantData IngredientA;
     public PlantData IngredientB;

@@ -222,7 +222,7 @@ public class ExperimentManager : MonoBehaviour
         Inventory.instance.RemovePlant(usedA, 1);
         Inventory.instance.RemovePlant(usedB, 1);
 
-        Recipe matched = FindMatchingRecipe(usedB, usedB);
+        Recipe matched = FindMatchingRecipe(usedA, usedB);
         if (matched == null)
         {
             SetFeedback(GetHelpfulFailureFeedback(usedB, usedB));
@@ -241,7 +241,7 @@ public class ExperimentManager : MonoBehaviour
             return;
         }
         bool isNewRecipe = unlockedRecipes.Add(matched);
-        Inventory.instance.AddPlant(resultPlant, 1);
+        Inventory.instance.AddSeeds(resultPlant, 1);
 
         Journal.instance.DiscoverCrop(resultPlant);
 

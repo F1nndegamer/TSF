@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45cc9b4a37090382eb10305f33d355dd, type: 3}
   m_Name: New recipe
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  recipeName: 
-  resultType: 0
-  IngredientA: {fileID: 0}
-  IngredientB: {fileID: 0}
+  recipeName: OrangeGreen
+  resultType: -1
+  IngredientA: {fileID: 11400000, guid: 20e4f9cda39432effb01b9559ec53386, type: 2}
+  IngredientB: {fileID: 11400000, guid: 0c5ee2ec015383e90bfcb37abc903d28, type: 2}
   clueHint: Hint or smt idk yet
   resultingSpecies: {fileID: 0}
-  basePlantvarient: {fileID: 0}
+  basePlantvarient: {fileID: 11400000, guid: 20e4f9cda39432effb01b9559ec53386, type: 2}
   modtype: 0
-  VarientPrefix: Swift
-  varientTint: {r: 0.85, g: 1, b: 0.75, a: 1}
-  growthMultipler: 0.75
-  bonusYield: 0
+  VarientPrefix: Orange
+  varientTint: {r: 1, g: 0.6410173, b: 0, a: 1}
+  growthMultipler: 0.25
+  bonusYield: 2
   sellPriceMultiplier: 1.35
   craftCropCostA: 0
   craftCostCostB: 0
