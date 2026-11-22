@@ -95,14 +95,16 @@ Tasks:
 # Playtester feedback NEXT
 
 - Sell/Buy difference is unclear, DONE
-- Grow finished unclear at first,
-- Got free seeds ?!?,
+- Grow finished unclear at first, DONE
+- Got free seeds ?!?, AND SEEDS DISSAPEAR WTF I GOT 1000 SEEDS HUH
 - Inventory hotbar changes unclear,
 - More content needed,
 - Max button in shop to sell/buy,
 - Incorrect slot selected in Inventory sometimes, (Should be each click/ opening),
 - Cant select empty slots,
 - Water fade in would be cool,
+- Hotkey menu,
+- UI Updating
 
 # 7. Add crop experimentation and alchemy NEXT
 
@@ -119,12 +121,12 @@ Tasks:
 - Recipe book DONE
 - To get more of the new crop, use the recipe book/ crafting menu seperate from experimenting DONE
 - A lot should be procedural NEXT
-- I want to make a massive tree graph of all plants, multiple combinations can give same result,
-- Hint for Journal items, like BuyInShop or a sweet veggetable
-- Make tile store water amount, not just binary (could be another mutation)
 
 # 8. Expand the world
 
+- I want to make a massive tree graph of all plants, multiple combinations can give same result,
+- Hint for Journal items, like BuyInShop or a sweet veggetable
+- Make tile store water amount, not just binary (could be another mutation) DONE (Not mutation) 
 - Create the world layout.
 - Add more areas to explore.
 - Add decorations and environmental details.
@@ -159,16 +161,16 @@ Tasks:
 
 # What I want the first playable version to include
 
-- A working grid and farm.
-- Mouse-based tile selection.
-- Tilling and watering.
-- Planting and harvesting.
-- A few different crops.
-- Crops that grow over real time.
-- A working inventory.
-- Basic crop definitions.
-- A simple botanical journal.
-- Saving and loading.
+- A working grid and farm. DONE
+- Mouse-based tile selection. DONE
+- Tilling and watering. DONE
+- Planting and harvesting. DONE
+- A few different crops. IMPORTANT
+- Crops that grow over real time. DONE
+- A working inventory. DONE
+- Basic crop definitions. DONE
+- A simple botanical journal. DONE
+- Saving and loading. NEXT
 
 # A few things to keep in mind
 

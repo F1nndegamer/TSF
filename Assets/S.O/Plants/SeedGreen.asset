@@ -15,14 +15,16 @@ MonoBehaviour:
   SeedName: GreenSeeds
   location: 0
   HotBarSlot: -1
-  growthTime: 24
+  growthTime: 1
   growStages:
   - {fileID: 11400000, guid: 26c59ab0e80510c7b925d462044a0478, type: 2}
   - {fileID: 11400000, guid: 71b5fba87f7dc0fd99653fd4b389763e, type: 2}
   - {fileID: 11400000, guid: c1e7dd058642f4288a8435159d93008a, type: 2}
   - {fileID: 11400000, guid: c6b2670e45bfa5ddab44a994690a34c8, type: 2}
   - {fileID: 11400000, guid: 4a1fc4b47bf8269618e0138bb4995179, type: 2}
+  waterCost: 0.5
   seedinventorySprite: {fileID: 1131535281375055967, guid: 1e127f230a4160ca79ebce79a2994995, type: 3}
   seedDetails: GreenSeedsDetails
   harvestYield: 2
-  seedCost: 1
+  buyPrice: 1
+  sellPrice: 0

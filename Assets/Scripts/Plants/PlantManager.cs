@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,6 +9,7 @@ public class PlantManager : MonoBehaviour
     public static PlantManager instance;
     public Tilemap plantTileMap;
     private Dictionary<Vector3Int, PlantInstance> plants = new();
+
     void Awake()
     {
         instance = this;
@@ -29,6 +31,7 @@ public class PlantManager : MonoBehaviour
         TileManager.instance.GetorCreateTile(position).hasCrop = false;
         plants.Remove(position);
         plantTileMap.SetTile(position, null);
+        TileManager.instance.RemoveAlarmTile(position);
     }
     public bool SpawnPlant(Vector3Int position, PlantData data)
     {
@@ -53,6 +56,7 @@ public class PlantManager : MonoBehaviour
         plantTileMap.SetTile(position, data.seeds.growStages[0]);
         return true;
     }
+
     private void UpdateGrowth()
     {
         foreach (var pair in plants)
@@ -60,24 +64,29 @@ public class PlantManager : MonoBehaviour
             Vector3Int position = pair.Key;
             PlantInstance plant = pair.Value;
             if (plant.IsFullyGrown())
-            {
-                TileData grownTileData = TileManager.instance.GetorCreateTile(position);
-                if (grownTileData.groundType == GroundType.Watered)
-                    TileManager.instance.UnWaterTile(position);
                 continue;
-            }
+
             TileData tileData = TileManager.instance.GetorCreateTile(position);
+
             if (tileData.groundType != GroundType.Watered)
                 continue;
+
             plant.growthProgress += Time.deltaTime;
             int newstage = Mathf.Clamp(Mathf.FloorToInt(plant.growthProgress / plant.data.seeds.growthTime * plant.data.seeds.growStages.Length), 0, plant.data.seeds.growStages.Length - 1);
             if (newstage != plant.currentStage)
             {
+                float water = plant.data.seeds.waterCost / plant.data.seeds.growStages.Length; ;
+                TileManager.instance.UnWaterTile(position, water);
                 plant.currentStage = newstage;
                 plantTileMap.SetTile(position, plant.data.seeds.growStages[newstage]);
             }
+            if (plant.IsFullyGrown())
+            {
+                TileManager.instance.AlarmTile(position);
+            }
         }
     }
+
     public PlantInstance GetPlant(Vector3Int position)
     {
         plants.TryGetValue(position, out PlantInstance plant);

@@ -12,7 +12,7 @@ public class SeedData : ScriptableObject
     public float growthTime = 24f;
     // 0 is initial
     public TileBase[] growStages;
-
+    public float waterCost;
     public Sprite seedinventorySprite;
     [TextArea(5, 15)]
     public String seedDetails;

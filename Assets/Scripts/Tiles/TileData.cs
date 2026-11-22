@@ -11,7 +11,7 @@ public class TileData
     public GroundType groundType;
     public bool hasCrop;
     public bool hasFertiliser;
-
+    public float waterAmount;
     public TileData(GroundType type = GroundType.Grass)
     {
         groundType = type;

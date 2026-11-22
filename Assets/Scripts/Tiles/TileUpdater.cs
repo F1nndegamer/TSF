@@ -165,6 +165,7 @@ public class TileUpdater : MonoBehaviour
                 break;
         }
     }
+
     public List<int> GetEmptySlots()
     {
         List<int> empties = new();
