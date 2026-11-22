@@ -32,6 +32,7 @@ public class HotBarSlot : MonoBehaviour
             }
         }
     }
+    
     public void ClearSlot()
     {
         function = Function.Nothing;

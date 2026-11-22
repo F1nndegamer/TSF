@@ -48,7 +48,9 @@ public class Inventory : MonoBehaviour
         tabParent.GetChild(1).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Seeds));
         tabParent.GetChild(2).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Plants));
         tabParent.GetChild(3).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Other));
+        foreach(Transform child in ) //Make buttons from the grid, so empty slots can be selected
     }
+
     void Awake()
     {
         instance = this;
@@ -59,7 +61,6 @@ public class Inventory : MonoBehaviour
     }
     private void Update()
     {
-        //TODO: Actual selling mechanics, for now, just one plant, the temp one in TileUpdater
         Keyboard kb = Keyboard.current;
         if (kb == null)
             return;
@@ -77,8 +78,6 @@ public class Inventory : MonoBehaviour
         }
         if (kb.rKey.wasPressedThisFrame)
         {
-
-            //Either add seeds or plant to Hotbar, we gotta figure out which one we have selected first, than either call movePlants or moveSeeds to hotbar
             if (SelectedSeeds)
             {
                 MoveSeedToHotBar(SelectedPlantData);
@@ -108,6 +107,7 @@ public class Inventory : MonoBehaviour
         SetPlant(data, 0);
         RefreshMoney();
     }
+
     private void BuySeeds(PlantData data)
     {
         if (data.seeds.buyPrice <= 0)
@@ -147,20 +147,12 @@ public class Inventory : MonoBehaviour
                 InventoryItem item = slotObj.GetComponent<InventoryItem>();
                 String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
 
-                int slotNumber = -1;
-                for (int i = 0; i < itemParent.childCount; i++)
-                {
-                    if (itemParent.GetChild(i).gameObject == slotObj)
-                    {
-                        slotNumber = i;
-                    }
-                }
-
-                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, slotNumber, itemCatagory.ToString(), kvp.Key));
+                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, itemCatagory.ToString(), kvp.Key, slotObj));//REMPOVE
                 item.countText.text = kvp.Value.ToString();
                 item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
             }
         }
+
         if (currentTab == Tabs.All || currentTab == Tabs.Seeds)
         {
             CreateSlots(seeds, Tabs.Seeds);
@@ -172,8 +164,10 @@ public class Inventory : MonoBehaviour
         TileUpdater.instance.DrawHotBar();
     }
 
-    public void ShowDetails(string details, int slotNumber, string plantOrSeed, PlantData data)
+    public void ShowDetails(string details, string plantOrSeed, PlantData data, GameObject slotObj)
     {
+        int slotNumber = slotObj.transform.GetSiblingIndex();
+
         foreach (Transform child in containerParent)
         {
             child.GetComponent<Image>().sprite = inactiveContainer;
@@ -294,6 +288,7 @@ public class Inventory : MonoBehaviour
         }
         return -1;
     }
+
     public void MoveSeedToHotBar(PlantData data)
     {
         if (data.seeds.location == Location.hotBar)

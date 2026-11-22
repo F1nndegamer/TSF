@@ -105,6 +105,11 @@ Tasks:
 - Water fade in would be cool,
 - Hotkey menu,
 - UI Updating
+- Layering FUCKED
+- Untill when watered
+- UI overlay
+- Escape to close
+- Money clears
 
 # 7. Add crop experimentation and alchemy NEXT
 
@@ -124,6 +129,8 @@ Tasks:
 
 # 8. Expand the world
 
+- Goals are needed.
+- Story
 - I want to make a massive tree graph of all plants, multiple combinations can give same result,
 - Hint for Journal items, like BuyInShop or a sweet veggetable
 - Make tile store water amount, not just binary (could be another mutation) DONE (Not mutation) 

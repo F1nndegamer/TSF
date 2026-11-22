@@ -27,6 +27,7 @@ public class Shop : MonoBehaviour
     public TextMeshProUGUI totalPriceText;
     public Button minusButton;
     public Button plusButton;
+    public Button maxButton;
     public Button confirmButton;
 
     public TextMeshProUGUI confirmButtonLabel;
@@ -53,6 +54,8 @@ public class Shop : MonoBehaviour
             minusButton.onClick.AddListener(() => ChangeQuantity(-1));
         if (plusButton != null)
             plusButton.onClick.AddListener(() => ChangeQuantity(1));
+        if (maxButton != null)
+            maxButton.onClick.AddListener(() => MaxQuantity());
         if (confirmButton != null)
             confirmButton.onClick.AddListener(ConfirmTransaction);
         if (shopPanel != null)
@@ -107,6 +110,13 @@ public class Shop : MonoBehaviour
     {
         SelectedItem = item;
         Quantity = Mathf.Clamp(Quantity, 1, GetMaxAffordableorOwned());
+        RefreshDetails();
+    }
+    public void MaxQuantity()
+    {
+        if (SelectedItem == null)
+            return;
+        Quantity = GetMaxAffordableorOwned();
         RefreshDetails();
     }
     public void ChangeQuantity(int delta)
