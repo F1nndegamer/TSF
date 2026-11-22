@@ -92,9 +92,9 @@ Tasks:
 - Add descriptions and other information to crop entries. DONE
 - Make discovering a new crop feel rewarding. DONE
 
-# Playtester feedback
+# Playtester feedback NEXT
 
-- Sell/Buy difference is unclear,
+- Sell/Buy difference is unclear, DONE
 - Grow finished unclear at first,
 - Got free seeds ?!?,
 - Inventory hotbar changes unclear,
@@ -106,19 +106,19 @@ Tasks:
 
 # 7. Add crop experimentation and alchemy NEXT
 
-- Decide how crop combinations should work.
-- Create a system for defining combinations.
-- Add a way to combine or experiment with crops.
-- Make successful experiments unlock new plants.
-- Make unsuccessful experiments give useful feedback.
-- Add discovered results to the botanical journal.
-- Make sure combinations aren't completely random or impossible to figure out.
-- 2 Types of experiment results: New species, and New types.
-- New species are like pumpkins, turnips
-- New types are like orange turnips or modified turnips with quicker grow time
-- Recipe book
-- To get more of the new crop, use the recipe book/ crafting menu seperate from experimenting
-- A lot should be procedural
+- Decide how crop combinations should work. DONE
+- Create a system for defining combinations. DONE
+- Add a way to combine or experiment with crops. DONE
+- Make successful experiments unlock new plants. DONE
+- Make unsuccessful experiments give useful feedback. DONE
+- Add discovered results to the botanical journal. KINDA
+- Make sure combinations aren't completely random or impossible to figure out. KINDA
+- 2 Types of experiment results: New species, and New types. DONE
+- New species are like pumpkins, turnips NEED ART
+- New types are like orange turnips or modified turnips with quicker grow time NEED ART
+- Recipe book DONE
+- To get more of the new crop, use the recipe book/ crafting menu seperate from experimenting DONE
+- A lot should be procedural NEXT
 - I want to make a massive tree graph of all plants, multiple combinations can give same result,
 - Hint for Journal items, like BuyInShop or a sweet veggetable
 - Make tile store water amount, not just binary (could be another mutation)

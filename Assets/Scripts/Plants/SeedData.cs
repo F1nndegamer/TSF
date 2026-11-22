@@ -17,7 +17,8 @@ public class SeedData : ScriptableObject
     [TextArea(5, 15)]
     public String seedDetails;
     public int harvestYield = 2;
-    public int seedCost = 1;
+    public int buyPrice = 1;
+    public int sellPrice;
 }
 
 public enum Location

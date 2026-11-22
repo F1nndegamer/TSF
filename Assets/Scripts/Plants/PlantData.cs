@@ -15,4 +15,5 @@ public class PlantData : ScriptableObject
     public int harvestYield = 2;
     public SeedData seeds;
     public int sellPrice;
+    public int buyPrice;
 }

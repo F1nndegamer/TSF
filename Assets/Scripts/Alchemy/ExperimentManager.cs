@@ -311,7 +311,8 @@ public class ExperimentManager : MonoBehaviour
             GameObject row = Instantiate(recipeRowPrefab, recipeListParent);
             TextMeshProUGUI label = row.GetComponentInChildren<TextMeshProUGUI>();
             Button btn = row.GetComponentInChildren<Button>();
-
+            Debug.Log(btn == null);
+            Debug.Log(label == null);
             string costStr = recipe.craftCropCostA + "x " + (recipe.IngredientA ? recipe.IngredientA.plantName : "None") + " + " +
                             recipe.craftCostCostB + "x " + (recipe.IngredientB ? recipe.IngredientB.plantName : "None");
 

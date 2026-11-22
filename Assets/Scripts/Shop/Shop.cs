@@ -18,6 +18,7 @@ public class Shop : MonoBehaviour
     public Button sellTabButton;
 
     public Image previewIcon;
+    public TextMeshProUGUI ShopText;
     public TextMeshProUGUI detailTitleText;
     public TextMeshProUGUI detailCatagoryText;
     public TextMeshProUGUI detailDescriptionText;
@@ -87,6 +88,7 @@ public class Shop : MonoBehaviour
     }
     public void RebuildList()
     {
+        ShopText.text = IsSellingMode ? "Sell" : "Buy";
         foreach (Transform child in listContentParent)
         {
             Destroy(child.gameObject);
@@ -121,8 +123,9 @@ public class Shop : MonoBehaviour
             return 1;
         if (!IsSellingMode)
         {
-            if (SelectedItem.buyPrice <= 0) return 99;
-            return Mathf.Max(1, GameManager.Money / SelectedItem.buyPrice);
+            int buyPrice = SelectedItem.sellsSeeds ? SelectedItem.plantData.seeds.buyPrice : SelectedItem.plantData.buyPrice;
+            if (buyPrice <= 0) return 99;
+            return Mathf.Max(1, GameManager.Money / buyPrice);
         }
         else
         {
@@ -152,7 +155,10 @@ public class Shop : MonoBehaviour
         else
             detailCatagoryText.text = isSeed ? pData.seeds.seedDetails : pData.plantDetails;
 
-        int unitPrice = IsSellingMode ? SelectedItem.sellPrice : SelectedItem.buyPrice;
+        int SellPrice = SelectedItem.sellsSeeds ? SelectedItem.plantData.seeds.sellPrice : SelectedItem.plantData.sellPrice;
+        int BuyPrice = SelectedItem.sellsSeeds ? SelectedItem.plantData.seeds.buyPrice : SelectedItem.plantData.buyPrice;
+
+        int unitPrice = IsSellingMode ? SellPrice : BuyPrice;
         int totalPrice = unitPrice * Quantity;
 
         detailUnitPriceText.text = unitPrice + "g each";
@@ -189,7 +195,8 @@ public class Shop : MonoBehaviour
         bool isSeed = SelectedItem.sellsSeeds;
         if (!IsSellingMode)
         {
-            int cost = SelectedItem.buyPrice * Quantity;
+            int BuyPrice = isSeed ? SelectedItem.plantData.seeds.buyPrice : SelectedItem.plantData.buyPrice;
+            int cost = BuyPrice * Quantity;
             if (GameManager.Money < cost)
                 return;
             GameManager.Money -= cost;
@@ -207,7 +214,8 @@ public class Shop : MonoBehaviour
                 Inventory.instance.RemoveSeeds(pData, Quantity);
             else
                 Inventory.instance.RemovePlant(pData, Quantity);
-            GameManager.Money += SelectedItem.sellPrice * Quantity;
+            int SellPrice = isSeed ? SelectedItem.plantData.seeds.sellPrice : SelectedItem.plantData.sellPrice;
+            GameManager.Money += SellPrice * Quantity;
         }
         RefreshMoneyUI();
         RefreshDetails();

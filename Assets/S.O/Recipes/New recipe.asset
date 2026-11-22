@@ -25,6 +25,6 @@ MonoBehaviour:
   growthMultipler: 0.25
   bonusYield: 2
   sellPriceMultiplier: 1.35
-  craftCropCostA: 0
-  craftCostCostB: 0
+  craftCropCostA: 1
+  craftCostCostB: 1
   craftOutputAmount: 2

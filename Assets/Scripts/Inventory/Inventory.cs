@@ -110,13 +110,13 @@ public class Inventory : MonoBehaviour
     }
     private void BuySeeds(PlantData data)
     {
-        if (data.seeds.seedCost <= 0)
+        if (data.seeds.buyPrice <= 0)
             return;
-        int amount = GameManager.Money / data.seeds.seedCost;
+        int amount = GameManager.Money / data.seeds.buyPrice;
         if (amount <= 0)
             return;
         AddSeeds(data, amount);
-        GameManager.Money -= amount * data.seeds.seedCost;
+        GameManager.Money -= amount * data.seeds.buyPrice;
         RefreshMoney();
     }
     public void RefreshMoney()
@@ -142,9 +142,7 @@ public class Inventory : MonoBehaviour
                 if (kvp.Value <= 0) continue;
                 if (itemCatagory == Tabs.Seeds) if (kvp.Key.seeds.location != Location.Inventory) continue;
                 if (itemCatagory == Tabs.Plants) if (kvp.Key.location != Location.Inventory) continue;
-                Debug.Log("AAAAh" + itemParent.childCount);
                 GameObject slotObj = Instantiate(slotPrefab, itemParent);
-                Debug.Log("Added");
                 activeSlots.Add(slotObj);
                 InventoryItem item = slotObj.GetComponent<InventoryItem>();
                 String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
@@ -152,7 +150,6 @@ public class Inventory : MonoBehaviour
                 int slotNumber = -1;
                 for (int i = 0; i < itemParent.childCount; i++)
                 {
-                    Debug.Log(itemParent.childCount);
                     if (itemParent.GetChild(i).gameObject == slotObj)
                     {
                         slotNumber = i;
@@ -187,7 +184,6 @@ public class Inventory : MonoBehaviour
 
         SelectedSeeds = plantOrSeed == "Seeds";
         SelectedPlantData = data;
-        Debug.Log(plantOrSeed);
     }
     public void SwitchTabs(Tabs tab)
     {
@@ -258,7 +254,6 @@ public class Inventory : MonoBehaviour
     public void RemoveSeeds(PlantData data, int amount)
     {
         int current = TryGetSeeds(data);
-        Debug.Log(current + " - " + amount + " = " + (current - amount));
         seeds[data] = current - amount;
         TileUpdater.instance.DrawHotBar();
     }
@@ -304,7 +299,6 @@ public class Inventory : MonoBehaviour
         if (data.seeds.location == Location.hotBar)
             return;
         int position = GetNextHotBarSlot();
-        Debug.Log(position);
         if (position == -1)
             return;
         data.seeds.location = Location.hotBar;
