@@ -15,23 +15,7 @@ public class CameraMovement : MonoBehaviour
     public Vector2 BottomLeft;
     private Vector3 velocity = Vector3.zero;
     private Vector3 targetPosition;
-    private GameInputAction input;
-    void Awake()
-    {
-        input = new GameInputAction();
-    }
-    void OnEnable()
-    {
-        input.Player.Enable();
-    }
-    void OnDisable()
-    {
-        input.Player.Disable();
-    }
-    void OnDestroy()
-    {
-        input.Dispose();
-    }
+    
     void Start()
     {
         targetPosition = transform.position;
@@ -39,9 +23,9 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-        speed = input.Player.Sprint.IsPressed() ? basespeed + SprintIncrease : basespeed;
+        speed = InputManager.instance.IsSprinting ? basespeed + SprintIncrease : basespeed;
 
-        Vector2 movement = input.Player.Move.ReadValue<Vector2>();
+        Vector2 movement = InputManager.instance.Movemenent;
 
         targetPosition += (Vector3)(movement * speed * Time.deltaTime);
 

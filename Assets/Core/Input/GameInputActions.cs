@@ -133,16 +133,6 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
                     ""priority"": 0
                 },
                 {
-                    ""name"": ""ReturnToInventory"",
-                    ""type"": ""Button"",
-                    ""id"": ""bc13afa1-484b-4da2-bd0c-35de8e78102d"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false,
-                    ""priority"": 0
-                },
-                {
                     ""name"": ""MoveToHotbar"",
                     ""type"": ""Button"",
                     ""id"": ""8329f9ff-96d8-4eb4-9cfe-ae3d7f723d72"",
@@ -181,6 +171,16 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""MoveToInv"",
+                    ""type"": ""Button"",
+                    ""id"": ""d985a501-ec45-4180-87eb-1c8fa7cd29ac"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -214,17 +214,6 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ToggleInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""03adde10-d74b-408c-8fff-589f735a4fc7"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ReturnToInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -324,6 +313,17 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ToggleShop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a56ca634-f5cb-4960-b663-bdf65f775d27"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveToInv"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -466,11 +466,11 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_ToggleExperiment = m_Player.FindAction("ToggleExperiment", throwIfNotFound: true);
         m_Player_ToggleInventory = m_Player.FindAction("ToggleInventory", throwIfNotFound: true);
-        m_Player_ReturnToInventory = m_Player.FindAction("ReturnToInventory", throwIfNotFound: true);
         m_Player_MoveToHotbar = m_Player.FindAction("MoveToHotbar", throwIfNotFound: true);
         m_Player_ToggleJournal = m_Player.FindAction("ToggleJournal", throwIfNotFound: true);
         m_Player_Close = m_Player.FindAction("Close", throwIfNotFound: true);
         m_Player_ToggleShop = m_Player.FindAction("ToggleShop", throwIfNotFound: true);
+        m_Player_MoveToInv = m_Player.FindAction("MoveToInv", throwIfNotFound: true);
         // Hotbar
         m_Hotbar = asset.FindActionMap("Hotbar", throwIfNotFound: true);
         m_Hotbar_SelectSlot = m_Hotbar.FindAction("SelectSlot", throwIfNotFound: true);
@@ -559,11 +559,11 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_ToggleExperiment;
     private readonly InputAction m_Player_ToggleInventory;
-    private readonly InputAction m_Player_ReturnToInventory;
     private readonly InputAction m_Player_MoveToHotbar;
     private readonly InputAction m_Player_ToggleJournal;
     private readonly InputAction m_Player_Close;
     private readonly InputAction m_Player_ToggleShop;
+    private readonly InputAction m_Player_MoveToInv;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -592,10 +592,6 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @ToggleInventory => m_Wrapper.m_Player_ToggleInventory;
         /// <summary>
-        /// Provides access to the underlying input action "Player/ReturnToInventory".
-        /// </summary>
-        public InputAction @ReturnToInventory => m_Wrapper.m_Player_ReturnToInventory;
-        /// <summary>
         /// Provides access to the underlying input action "Player/MoveToHotbar".
         /// </summary>
         public InputAction @MoveToHotbar => m_Wrapper.m_Player_MoveToHotbar;
@@ -611,6 +607,10 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/ToggleShop".
         /// </summary>
         public InputAction @ToggleShop => m_Wrapper.m_Player_ToggleShop;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MoveToInv".
+        /// </summary>
+        public InputAction @MoveToInv => m_Wrapper.m_Player_MoveToInv;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -649,9 +649,6 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
             @ToggleInventory.started += instance.OnToggleInventory;
             @ToggleInventory.performed += instance.OnToggleInventory;
             @ToggleInventory.canceled += instance.OnToggleInventory;
-            @ReturnToInventory.started += instance.OnReturnToInventory;
-            @ReturnToInventory.performed += instance.OnReturnToInventory;
-            @ReturnToInventory.canceled += instance.OnReturnToInventory;
             @MoveToHotbar.started += instance.OnMoveToHotbar;
             @MoveToHotbar.performed += instance.OnMoveToHotbar;
             @MoveToHotbar.canceled += instance.OnMoveToHotbar;
@@ -664,6 +661,9 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
             @ToggleShop.started += instance.OnToggleShop;
             @ToggleShop.performed += instance.OnToggleShop;
             @ToggleShop.canceled += instance.OnToggleShop;
+            @MoveToInv.started += instance.OnMoveToInv;
+            @MoveToInv.performed += instance.OnMoveToInv;
+            @MoveToInv.canceled += instance.OnMoveToInv;
         }
 
         /// <summary>
@@ -687,9 +687,6 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
             @ToggleInventory.started -= instance.OnToggleInventory;
             @ToggleInventory.performed -= instance.OnToggleInventory;
             @ToggleInventory.canceled -= instance.OnToggleInventory;
-            @ReturnToInventory.started -= instance.OnReturnToInventory;
-            @ReturnToInventory.performed -= instance.OnReturnToInventory;
-            @ReturnToInventory.canceled -= instance.OnReturnToInventory;
             @MoveToHotbar.started -= instance.OnMoveToHotbar;
             @MoveToHotbar.performed -= instance.OnMoveToHotbar;
             @MoveToHotbar.canceled -= instance.OnMoveToHotbar;
@@ -702,6 +699,9 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
             @ToggleShop.started -= instance.OnToggleShop;
             @ToggleShop.performed -= instance.OnToggleShop;
             @ToggleShop.canceled -= instance.OnToggleShop;
+            @MoveToInv.started -= instance.OnMoveToInv;
+            @MoveToInv.performed -= instance.OnMoveToInv;
+            @MoveToInv.canceled -= instance.OnMoveToInv;
         }
 
         /// <summary>
@@ -867,13 +867,6 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleInventory(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "ReturnToInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnReturnToInventory(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "MoveToHotbar" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -901,6 +894,13 @@ public partial class @GameInputAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleShop(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MoveToInv" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMoveToInv(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Hotbar" which allows adding and removing callbacks.

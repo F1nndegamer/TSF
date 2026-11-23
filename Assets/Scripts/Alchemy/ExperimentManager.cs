@@ -47,8 +47,8 @@ public class ExperimentManager : MonoBehaviour
     }
     private void OnDestroy() {
 
-        InputManager.instance.ToggleShop += ToggleExperiment;
-        InputManager.instance.Close += CloseExperiment;
+        InputManager.instance.ToggleShop -= ToggleExperiment;
+        InputManager.instance.Close -= CloseExperiment;
     }
     public void CloseExperiment()
     {

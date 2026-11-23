@@ -69,14 +69,14 @@ public class Inventory : MonoBehaviour
         InputManager.instance.MoveToHotbar -= MoveToHotbar;
         InputManager.instance.Close -= HandleCloseInventory;
     }
-    
+
     public Dictionary<PlantData, int> GetAllPlants()
     {
         return plants;
     }
     public void MoveToHotbar()
     {
-        if (SelectedItem == null)
+        if (SelectedPlantData == null)
             return;
         if (SelectedSeeds)
         {

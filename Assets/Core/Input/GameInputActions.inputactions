@@ -47,16 +47,6 @@
                     "priority": 0
                 },
                 {
-                    "name": "ReturnToInventory",
-                    "type": "Button",
-                    "id": "bc13afa1-484b-4da2-bd0c-35de8e78102d",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
                     "name": "MoveToHotbar",
                     "type": "Button",
                     "id": "8329f9ff-96d8-4eb4-9cfe-ae3d7f723d72",
@@ -95,6 +85,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "MoveToInv",
+                    "type": "Button",
+                    "id": "d985a501-ec45-4180-87eb-1c8fa7cd29ac",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -128,17 +128,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "ToggleInventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "03adde10-d74b-408c-8fff-589f735a4fc7",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ReturnToInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -238,6 +227,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ToggleShop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a56ca634-f5cb-4960-b663-bdf65f775d27",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveToInv",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
