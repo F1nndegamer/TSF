@@ -30,6 +30,9 @@ public class TileUpdater : MonoBehaviour
     private HotBarSlot activeBarSlot;
     void Start()
     {
+        InputManager.instance.SelectHotbarSlot += SelectTool;
+        InputManager.instance.MoveToInv += MoveToInv;
+
         SelectToolType(selectedtool);
         DrawHotBar();
         foreach (Transform child in hotBaritemParent)
@@ -37,8 +40,13 @@ public class TileUpdater : MonoBehaviour
             HotBarSlot slot = child.GetComponent<HotBarSlot>();
             barslots.Add(slot);
         }
-    }
 
+    }
+    public void OnDestroy()
+    {
+        InputManager.instance.MoveToInv -= MoveToInv;
+        InputManager.instance.SelectHotbarSlot -= SelectTool;
+    }
 
     void Awake()
     {
@@ -46,7 +54,6 @@ public class TileUpdater : MonoBehaviour
     }
     void Update()
     {
-        HandleToolSelection();
         Mouse mouse = Mouse.current;
 
         if (mouse == null || !mouse.leftButton.isPressed)
@@ -81,55 +88,27 @@ public class TileUpdater : MonoBehaviour
                 break;
         }
     }
-    private void HandleToolSelection()
+    public void MoveToInv()
     {
-        Keyboard kb = Keyboard.current;
-        if (kb == null)
-            return;
-        if (kb.digit1Key.wasPressedThisFrame)
-            SelectTool(1);
-        if (kb.digit2Key.wasPressedThisFrame)
-            SelectTool(2);
-        if (kb.digit3Key.wasPressedThisFrame)
-            SelectTool(3);
-        if (kb.digit4Key.wasPressedThisFrame)
-            SelectTool(4);
-        if (kb.digit5Key.wasPressedThisFrame)
-            SelectTool(5);
-        if (kb.digit6Key.wasPressedThisFrame)
-            SelectTool(6);
-        if (kb.digit7Key.wasPressedThisFrame)
-            SelectTool(7);
-        if (kb.digit8Key.wasPressedThisFrame)
-            SelectTool(8);
-        if (kb.digit9Key.wasPressedThisFrame)
-            SelectTool(9);
-        if (kb.digit0Key.wasPressedThisFrame)
-            SelectTool(0);
-        if (kb.fKey.wasPressedThisFrame)
-        {   
-            if (activeBarSlot.function == Function.Seeds)
-            {
-                Inventory.instance.MoveSeedToInv(activeBarSlot.data);
+        if (activeBarSlot.function == Function.Seeds)
+        {
+            Inventory.instance.MoveSeedToInv(activeBarSlot.data);
 
-            }
-            if (activeBarSlot.function == Function.Plant)
-            {
-                Inventory.instance.MovePlantToInv(activeBarSlot.data);
-            }
+        }
+        if (activeBarSlot.function == Function.Plant)
+        {
+            Inventory.instance.MovePlantToInv(activeBarSlot.data);
         }
     }
     private void SelectTool(int invIndex)
     {
-        invIndex -= 1;
-        if (invIndex == -1)
-        {
-            invIndex = 9;
-        }
+        invIndex = invIndex == 0 ? 9 : invIndex - 1;
+        if (invIndex < 0 || invIndex >= hotBarContainerParent.childCount || invIndex >= hotBaritemParent.childCount)
+            return;
+
         foreach (Transform child in hotBarContainerParent)
-        {
             child.GetComponent<Image>().sprite = inActiveSprite;
-        }
+
         hotBarContainerParent.GetChild(invIndex).GetComponent<Image>().sprite = activeSprite;
         //Lets find the tool
         Transform item = hotBaritemParent.GetChild(invIndex);
@@ -193,27 +172,27 @@ public class TileUpdater : MonoBehaviour
             Transform child = hotBaritemParent.GetChild(i);
             HotBarSlot barslot = child.GetComponent<HotBarSlot>();
             Image slotImage = child.GetComponent<Image>();
-            
+
             int count = 0;
             bool showCount = false;
 
             if (barslot.function == Function.Seeds)
             {
-                if(barslot.data == null || Inventory.instance == null)
+                if (barslot.data == null || Inventory.instance == null)
                 {
                     barslot.ClearSlot();
                 }
                 else
                 {
                     count = Inventory.instance.TryGetSeeds(barslot.data);
-                    if(count <= 0)
+                    if (count <= 0)
                     {
                         barslot.data.seeds.location = Location.Inventory;
                         barslot.data.seeds.HotBarSlot = -1;
                         barslot.ClearSlot();
-                        if(selectedtool == ToolType.Seeds && selectedPlant == barslot.data)
+                        if (selectedtool == ToolType.Seeds && selectedPlant == barslot.data)
                             SelectToolType(ToolType.Nothing);
-                        
+
                     }
                     else
                     {
@@ -240,7 +219,7 @@ public class TileUpdater : MonoBehaviour
                     }
                     else
                     {
-                        barslot.data.seeds.HotBarSlot = i;
+                        barslot.data.HotBarSlot = i;
                         barslot.sprite = barslot.data.inventorySprite;
                         showCount = true;
                     }
@@ -257,10 +236,10 @@ public class TileUpdater : MonoBehaviour
                 child.GetComponent<Image>().color = Color.white;
             }
 
-            if(barslot.count != null)
+            if (barslot.count != null)
             {
                 barslot.count.enabled = showCount;
-                if(showCount)
+                if (showCount)
                     barslot.count.text = count.ToString();
             }
         }
