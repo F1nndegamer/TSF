@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,12 +19,74 @@ public class InputManager : MonoBehaviour
     public event Action<int> SelectHotbarSlot;
     public Vector2 Movemenent => input.Player.Move.ReadValue<Vector2>();
     public bool IsSprinting => input.Player.Sprint.IsPressed();
+    private InputActionRebindingExtensions.RebindingOperation rebindingOperation;
 
     void Awake()
     {
         instance = this;
         input = new GameInputAction();
+
+        string savedBindings = PlayerPrefs.GetString("InputBindings", "");
+
+        if (!string.IsNullOrEmpty(savedBindings))
+            input.asset.LoadBindingOverridesFromJson(savedBindings);
     }
+    public void RebindAction(string actionPath, Action<string> onComplete = null)
+    {
+        InputAction action = input.asset.FindAction(actionPath);
+
+        if (action == null)
+        {
+            Debug.LogError("Not found :(");
+            return;
+        }
+
+        rebindingOperation?.Cancel();
+        action.Disable();
+
+        rebindingOperation = action.PerformInteractiveRebinding()
+        .WithCancelingThrough("<Keyboard>/escape")
+        .OnComplete(operation =>
+        {
+            action.Enable();
+
+            string binding = action.GetBindingDisplayString();
+
+            input.asset.SaveBindingOverridesAsJson();
+
+            PlayerPrefs.SetString(
+                "InputBindings",
+                input.asset.SaveBindingOverridesAsJson()
+            );
+
+            PlayerPrefs.Save();
+
+            operation.Dispose();
+            rebindingOperation = null;
+
+            onComplete?.Invoke(binding);
+        })
+        .OnCancel(operation =>
+        {
+            action.Enable();
+            operation.Dispose();
+            rebindingOperation = null;
+        });
+        rebindingOperation.Start();
+    }
+    
+    public string GetBinding(string actionPath)
+    {
+        return input.asset.FindAction(actionPath)?.GetBindingDisplayString();
+    }
+    public void ResetBinding()
+    {
+        rebindingOperation?.Cancel();
+        input.asset.RemoveAllBindingOverrides();
+        PlayerPrefs.DeleteKey("InputBindings");
+        PlayerPrefs.Save();
+    }
+
     void OnEnable()
     {
         input.Player.Enable();
@@ -71,6 +134,7 @@ public class InputManager : MonoBehaviour
 
         input.Player.Disable();
         input.Hotbar.Disable();
+        rebindingOperation?.Cancel();
     }
 
     void OnDestroy()
