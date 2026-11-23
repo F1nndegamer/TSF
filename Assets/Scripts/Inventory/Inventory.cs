@@ -55,54 +55,45 @@ public class Inventory : MonoBehaviour
             int index = i;
             containerParent.GetChild(i).GetComponent<Button>()?.onClick.AddListener(() => SelectSlot(index));
         }
+        InputManager.instance.ToggleInventory += switchInventory;
+        InputManager.instance.MoveToHotbar += MoveToHotbar;
+        InputManager.instance.Close += HandleCloseInventory;
     }
     void Awake()
     {
         instance = this;
     }
+    private void OnDestroy()
+    {
+        InputManager.instance.ToggleInventory -= switchInventory;
+        InputManager.instance.MoveToHotbar -= MoveToHotbar;
+        InputManager.instance.Close -= HandleCloseInventory;
+    }
+    
     public Dictionary<PlantData, int> GetAllPlants()
     {
         return plants;
     }
-
-    private void Update()
+    public void MoveToHotbar()
     {
-        Keyboard kb = Keyboard.current;
-        if (kb == null)
+        if (SelectedItem == null)
             return;
-        if (kb.digit6Key.wasPressedThisFrame)
+        if (SelectedSeeds)
         {
-            SellPlants(TileUpdater.instance.selectedPlant);
+            MoveSeedToHotBar(SelectedPlantData);
         }
-        if (kb.digit7Key.wasPressedThisFrame)
+        else
         {
-            BuySeeds(TileUpdater.instance.selectedPlant);
+            MovePlantToHotBar(SelectedPlantData);
         }
-        if (kb.eKey.wasPressedThisFrame)
+    }
+    public void HandleCloseInventory()
+    {
+        if (inventoryPanel.gameObject.activeSelf)
         {
             switchInventory();
         }
-        if (kb.rKey.wasPressedThisFrame)
-        {
-            if (SelectedSeeds)
-            {
-                MoveSeedToHotBar(SelectedPlantData);
-            }
-            else
-            {
-                MovePlantToHotBar(SelectedPlantData);
-            }
-        }
-
-        if (kb.escapeKey.wasPressedThisFrame)
-        {
-            if(inventoryPanel.gameObject.activeSelf)
-            {
-                switchInventory();
-            }
-        }
     }
-
     public void switchInventory()
     {
         GameManager.IsInventoryOpen = !GameManager.IsInventoryOpen; //Set Gamemanager to correct state

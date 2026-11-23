@@ -61,13 +61,19 @@ public class Shop : MonoBehaviour
             confirmButton.onClick.AddListener(ConfirmTransaction);
         if (shopPanel != null)
             shopPanel.SetActive(false);
+
+        InputManager.instance.ToggleShop += ToggleShop;
+        InputManager.instance.Close += Close;
     }
-    private void Update()
+    private void OnDestroy() {
+
+        InputManager.instance.ToggleShop -= ToggleShop;
+        InputManager.instance.Close -= Close;
+    }
+    public void Close()
     {
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && shopPanel.activeSelf)
-        {
-            ToggleShop();
-        }
+        if (shopPanel.activeSelf)
+            SetShopOpen(!shopPanel.activeSelf);
     }
     public void ToggleShop()
     {

@@ -37,6 +37,12 @@ public class Journal : MonoBehaviour
         instance = this;
     }
 
+    private void OnDestroy()
+    {
+        InputManager.instance.ToggleJournal -= ToggleJournal;
+        InputManager.instance.Close -= CloseJournal;
+    }
+
     void Start()
     {
         if (closeButton != null)
@@ -45,18 +51,14 @@ public class Journal : MonoBehaviour
             journalPanel.SetActive(false);
         if (discoveryPopup != null)
             discoveryPopup.SetActive(false);
+
+        InputManager.instance.ToggleJournal += ToggleJournal;
+        InputManager.instance.Close += CloseJournal;
     }
-    void Update()
+    public void CloseJournal()
     {
-        Keyboard kb = Keyboard.current;
-        if (kb != null && kb.jKey.wasPressedThisFrame)
-        {
-            ToggleJournal();
-        }
-        if (kb != null && kb.escapeKey.wasPressedThisFrame && journalPanel.gameObject.activeSelf)
-        {
-            ToggleJournal();
-        }
+        if (journalPanel.activeSelf)
+            SetJournalOpen(!journalPanel.activeSelf);
     }
     public void ToggleJournal()
     {

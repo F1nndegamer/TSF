@@ -45,17 +45,15 @@ public class ExperimentManager : MonoBehaviour
     {
         instance = this;
     }
-    void Update()
+    private void OnDestroy() {
+
+        InputManager.instance.ToggleShop += ToggleExperiment;
+        InputManager.instance.Close += CloseExperiment;
+    }
+    public void CloseExperiment()
     {
-        Keyboard kb = Keyboard.current;
-        if (kb.tabKey.wasPressedThisFrame)
-        {
+        if(experimentPanel.activeSelf)
             ToggleExperiment();
-        }
-        if(kb.escapeKey.wasPressedThisFrame && experimentPanel.activeSelf)
-        {
-            ToggleExperiment();
-        }
     }
     void Start()
     {
@@ -75,6 +73,9 @@ public class ExperimentManager : MonoBehaviour
         if (slotBButton != null)
             slotBButton.onClick.AddListener(() => ClearSlot(isSlotA: false));
         if (experimentPanel != null) experimentPanel.SetActive(false);
+
+        InputManager.instance.ToggleExperiment += ToggleExperiment;
+        InputManager.instance.Close += CloseExperiment;
 
         RefreshSlotsUI();
     }

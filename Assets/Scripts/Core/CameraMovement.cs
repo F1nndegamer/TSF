@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,34 +15,38 @@ public class CameraMovement : MonoBehaviour
     public Vector2 BottomLeft;
     private Vector3 velocity = Vector3.zero;
     private Vector3 targetPosition;
+    private GameInputAction input;
+    void Awake()
+    {
+        input = new GameInputAction();
+    }
+    void OnEnable()
+    {
+        input.Player.Enable();
+    }
+    void OnDisable()
+    {
+        input.Player.Disable();
+    }
+    void OnDestroy()
+    {
+        input.Dispose();
+    }
     void Start()
     {
         targetPosition = transform.position;
     }
-    
+
     private void Update()
     {
-        if (Keyboard.current.shiftKey.isPressed || Keyboard.current.leftCtrlKey.isPressed)
-        {
-            speed = basespeed + SprintIncrease;
-        }
-        else
-        {
-            speed = basespeed;
-        }
-        Vector3 movement = Vector3.zero;
-        
-        //TODO: I am using hardCoded Inputs, later Ill use actions for keybinds
-        if (Keyboard.current.wKey.isPressed) movement.y += 1;
-        if (Keyboard.current.sKey.isPressed) movement.y -= 1;
-        if (Keyboard.current.aKey.isPressed) movement.x -= 1;
-        if (Keyboard.current.dKey.isPressed) movement.x += 1;
+        speed = input.Player.Sprint.IsPressed() ? basespeed + SprintIncrease : basespeed;
 
-        targetPosition += movement * speed * Time.deltaTime;
-        if (targetPosition.x >= TopRight.x) targetPosition.x = TopRight.x;
-        if (targetPosition.y >= TopRight.y) targetPosition.y = TopRight.y;
-        if (targetPosition.x <= BottomLeft.x) targetPosition.x = BottomLeft.x;
-        if (targetPosition.y <= BottomLeft.y) targetPosition.y = BottomLeft.y;
+        Vector2 movement = input.Player.Move.ReadValue<Vector2>();
+
+        targetPosition += (Vector3)(movement * speed * Time.deltaTime);
+
+        targetPosition.x = Mathf.Clamp(targetPosition.x, BottomLeft.x, TopRight.x);
+        targetPosition.y = Mathf.Clamp(targetPosition.y, BottomLeft.y, TopRight.y);
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, SmoothTime);
     }
 }
