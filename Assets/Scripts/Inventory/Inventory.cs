@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using Unity.VisualScripting;
+using System.ComponentModel;
 public enum Tabs
 {
     All,
@@ -36,21 +37,25 @@ public class Inventory : MonoBehaviour
 
     private Dictionary<PlantData, int> seeds = new();
     private Dictionary<PlantData, int> plants = new();
-    private List<Transform> itemSlots = new();
-    private List<Transform> itemParents = new();
     public static Inventory instance;
     private GameObject SelectedItem;
     private bool SelectedSeeds;
     public PlantData SelectedPlantData;
+    private List<(string details, Tabs category, PlantData data)> slotData = new();
+
+    private int InvSelected;
     private void Start()
     {
         tabParent.GetChild(0).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.All));
         tabParent.GetChild(1).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Seeds));
         tabParent.GetChild(2).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Plants));
         tabParent.GetChild(3).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.Other));
-        foreach(Transform child in ) //Make buttons from the grid, so empty slots can be selected
+        for (int i = 0; i < containerParent.childCount; i++)
+        {
+            int index = i;
+            containerParent.GetChild(i).GetComponent<Button>()?.onClick.AddListener(() => SelectSlot(index));
+        }
     }
-
     void Awake()
     {
         instance = this;
@@ -126,13 +131,14 @@ public class Inventory : MonoBehaviour
     }
     public void InitialiseInv()
     {
-        for(int i = itemParent.childCount - 1; i >= 0; i--)
+        for (int i = itemParent.childCount - 1; i >= 0; i--)
         {
             GameObject childobj = itemParent.GetChild(i).gameObject;
             childobj.SetActive(false);
             Destroy(childobj);
         }
         activeSlots.Clear();
+        slotData.Clear();
         void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
         {
             if (currentTab != Tabs.All && currentTab != itemCatagory)
@@ -146,13 +152,11 @@ public class Inventory : MonoBehaviour
                 activeSlots.Add(slotObj);
                 InventoryItem item = slotObj.GetComponent<InventoryItem>();
                 String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
-
-                item.GetComponent<Button>().onClick.AddListener(() => ShowDetails(details, itemCatagory.ToString(), kvp.Key, slotObj));//REMPOVE
+                slotData.Add((details, itemCatagory, kvp.Key));
                 item.countText.text = kvp.Value.ToString();
                 item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
             }
         }
-
         if (currentTab == Tabs.All || currentTab == Tabs.Seeds)
         {
             CreateSlots(seeds, Tabs.Seeds);
@@ -162,23 +166,33 @@ public class Inventory : MonoBehaviour
             CreateSlots(plants, Tabs.Plants);
         }
         TileUpdater.instance.DrawHotBar();
+        SelectSlot(InvSelected);
     }
 
-    public void ShowDetails(string details, string plantOrSeed, PlantData data, GameObject slotObj)
+    public void SelectSlot(int index)
     {
-        int slotNumber = slotObj.transform.GetSiblingIndex();
-
         foreach (Transform child in containerParent)
         {
             child.GetComponent<Image>().sprite = inactiveContainer;
         }
-        SelectedItem = containerParent.GetChild(slotNumber).gameObject;
-        containerParent.GetChild(slotNumber).GetComponent<Image>().sprite = activeContainer;
-        DetailText.text = details;
+        InvSelected = index;
 
-        SelectedSeeds = plantOrSeed == "Seeds";
-        SelectedPlantData = data;
+        containerParent.GetChild(index).GetComponent<Image>().sprite = activeContainer;
+
+        if (index < 0 || index >= slotData.Count || index >= containerParent.childCount)
+        {
+            Debug.Log("Not all met");
+            DetailText.text = "";
+            SelectedPlantData = null;
+            SelectedSeeds = false;
+            return;
+        }
+        var selected = slotData[index];
+        SelectedSeeds = selected.category == Tabs.Seeds;
+        SelectedPlantData = selected.data;
+        DetailText.text = SelectedPlantData.plantDetails;
     }
+
     public void SwitchTabs(Tabs tab)
     {
         currentTab = tab;
