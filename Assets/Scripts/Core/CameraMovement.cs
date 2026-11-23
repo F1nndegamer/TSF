@@ -18,6 +18,7 @@ public class CameraMovement : MonoBehaviour
     {
         targetPosition = transform.position;
     }
+    
     private void Update()
     {
         if (Keyboard.current.shiftKey.isPressed || Keyboard.current.leftCtrlKey.isPressed)

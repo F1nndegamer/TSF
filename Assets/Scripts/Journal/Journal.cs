@@ -31,10 +31,12 @@ public class Journal : MonoBehaviour
 
     private HashSet<PlantData> discoveredCrops = new();
     private PlantData selectedCrop;
+
     void Awake()
     {
         instance = this;
     }
+
     void Start()
     {
         if (closeButton != null)
@@ -48,6 +50,10 @@ public class Journal : MonoBehaviour
     {
         Keyboard kb = Keyboard.current;
         if (kb != null && kb.jKey.wasPressedThisFrame)
+        {
+            ToggleJournal();
+        }
+        if (kb != null && kb.escapeKey.wasPressedThisFrame && journalPanel.gameObject.activeSelf)
         {
             ToggleJournal();
         }

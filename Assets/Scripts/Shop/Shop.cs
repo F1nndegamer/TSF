@@ -61,6 +61,13 @@ public class Shop : MonoBehaviour
         if (shopPanel != null)
             shopPanel.SetActive(false);
     }
+    private void Update()
+    {
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && shopPanel.activeSelf)
+        {
+            ToggleShop();
+        }
+    }
     public void ToggleShop()
     {
         SetShopOpen(!shopPanel.activeSelf);

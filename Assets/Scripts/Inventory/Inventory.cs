@@ -64,6 +64,7 @@ public class Inventory : MonoBehaviour
     {
         return plants;
     }
+
     private void Update()
     {
         Keyboard kb = Keyboard.current;
@@ -92,7 +93,16 @@ public class Inventory : MonoBehaviour
                 MovePlantToHotBar(SelectedPlantData);
             }
         }
+
+        if (kb.escapeKey.wasPressedThisFrame)
+        {
+            if(inventoryPanel.gameObject.activeSelf)
+            {
+                switchInventory();
+            }
+        }
     }
+
     public void switchInventory()
     {
         GameManager.IsInventoryOpen = !GameManager.IsInventoryOpen; //Set Gamemanager to correct state
@@ -168,7 +178,6 @@ public class Inventory : MonoBehaviour
         TileUpdater.instance.DrawHotBar();
         SelectSlot(InvSelected);
     }
-
     public void SelectSlot(int index)
     {
         foreach (Transform child in containerParent)
@@ -192,7 +201,6 @@ public class Inventory : MonoBehaviour
         SelectedPlantData = selected.data;
         DetailText.text = SelectedPlantData.plantDetails;
     }
-
     public void SwitchTabs(Tabs tab)
     {
         currentTab = tab;
@@ -222,6 +230,7 @@ public class Inventory : MonoBehaviour
             InitialiseInv();
         }
     }
+
     #region PlantInv
     public void SetActiveSeed(PlantData data)
     {
@@ -240,10 +249,12 @@ public class Inventory : MonoBehaviour
         plants[data] = current - amount;
         TileUpdater.instance.DrawHotBar();
     }
+
     public void SetPlant(PlantData data, int amount)
     {
         plants[data] = Mathf.Max(0, amount);
     }
+
     public int TryGetPlant(PlantData data)
     {
         if (!plants.TryGetValue(data, out int amount))
@@ -253,6 +264,7 @@ public class Inventory : MonoBehaviour
         }
         return amount;
     }
+
     public void AddSeeds(PlantData data, int amount)
     {
         seeds.TryGetValue(data, out int current);

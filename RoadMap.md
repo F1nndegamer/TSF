@@ -96,20 +96,17 @@ Tasks:
 
 - Sell/Buy difference is unclear, DONE
 - Grow finished unclear at first, DONE
+- Escape to close DONE!
+- Max button in shop to sell/buy, DONE
+- Cant select empty slots, DONE
+- Incorrect slot selected in Inventory sometimes, DONE FUCK YEAH
+- Untill when watered DONE
+- Inventory hotbar changes unclear, clicking insteasd of hotkeys would be best. NEXT
+- Hotkey menu, NEXT
+- Layering FUCKED (easy fix) NEXT
+- UI overlay (?)
+- Money clears and money gets spend on seeds, FIND ROOT CAUSE FIRST
 - Got free seeds ?!?, AND SEEDS DISSAPEAR WTF I GOT 1000 SEEDS HUH
-- Inventory hotbar changes unclear,
-- More content needed,
-- Max button in shop to sell/buy,
-- Incorrect slot selected in Inventory sometimes, (Should be each click/ opening),
-- Cant select empty slots,
-- Water fade in would be cool,
-- Hotkey menu,
-- UI Updating
-- Layering FUCKED
-- Untill when watered
-- UI overlay
-- Escape to close
-- Money clears
 
 # 7. Add crop experimentation and alchemy NEXT
 
@@ -118,17 +115,20 @@ Tasks:
 - Add a way to combine or experiment with crops. DONE
 - Make successful experiments unlock new plants. DONE
 - Make unsuccessful experiments give useful feedback. DONE
-- Add discovered results to the botanical journal. KINDA
-- Make sure combinations aren't completely random or impossible to figure out. KINDA
+- Add discovered results to the botanical journal. DONE
 - 2 Types of experiment results: New species, and New types. DONE
-- New species are like pumpkins, turnips NEED ART
-- New types are like orange turnips or modified turnips with quicker grow time NEED ART
 - Recipe book DONE
 - To get more of the new crop, use the recipe book/ crafting menu seperate from experimenting DONE
+- Make sure combinations aren't completely random or impossible to figure out. KINDA
+- New species are like pumpkins, turnips NEED ART
+- New types are like orange turnips or modified turnips with quicker grow time NEED ART
 - A lot should be procedural NEXT
 
 # 8. Expand the world
 
+- Make hack club Readme (Next)
+- More content needed, (feedback)
+- Pause menu,
 - Goals are needed.
 - Story
 - I want to make a massive tree graph of all plants, multiple combinations can give same result,
@@ -144,6 +144,8 @@ Tasks:
 
 # 9. Improve the visuals and sound
 
+- UI Updating, align everything and new assets
+- Water fade in would be cool,
 - Settle on a consistent art style.
 - Make the ground and soil tiles look good.
 - Add sprites for the crops and their growth stages.
@@ -160,6 +162,7 @@ Tasks:
 - Save crop growth progress.
 - Save discovered plants.
 - Save journal progress.
+- Save recipes
 - Load everything correctly when starting the game.
 - Test saving and loading in different situations.
 - Fix bugs and awkward interactions.

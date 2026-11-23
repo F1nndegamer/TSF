@@ -52,6 +52,10 @@ public class ExperimentManager : MonoBehaviour
         {
             ToggleExperiment();
         }
+        if(kb.escapeKey.wasPressedThisFrame && experimentPanel.activeSelf)
+        {
+            ToggleExperiment();
+        }
     }
     void Start()
     {

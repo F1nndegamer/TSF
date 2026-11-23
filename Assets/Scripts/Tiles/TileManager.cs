@@ -89,7 +89,7 @@ public class TileManager : MonoBehaviour
         TileData data = GetorCreateTile(position);
         if (data.hasCrop)
             return;
-        if (data.groundType != GroundType.Tilled)
+        if (data.groundType != GroundType.Tilled || data.groundType != GroundType.Watered)
             return;
         data.groundType = GroundType.Grass;
         groundTilemap.SetTile(position, grassTile);

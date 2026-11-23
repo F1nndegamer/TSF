@@ -39,6 +39,7 @@ public class TileUpdater : MonoBehaviour
         }
     }
 
+
     void Awake()
     {
         instance = this;
@@ -106,10 +107,7 @@ public class TileUpdater : MonoBehaviour
         if (kb.digit0Key.wasPressedThisFrame)
             SelectTool(0);
         if (kb.fKey.wasPressedThisFrame)
-        {
-            if (GameManager.IsInventoryOpen)
-                return;
-            
+        {   
             if (activeBarSlot.function == Function.Seeds)
             {
                 Inventory.instance.MoveSeedToInv(activeBarSlot.data);
