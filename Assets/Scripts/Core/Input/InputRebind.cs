@@ -17,7 +17,7 @@ public class InputRebind : MonoBehaviour
         if(rebindButton != null)
             rebindButton.onClick.AddListener(StartRebind);
     }
-
+    
     public void RefreshUI()
     {
         if(actionLabelText != null && !string.IsNullOrEmpty(labelName))

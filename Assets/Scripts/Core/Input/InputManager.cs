@@ -95,8 +95,8 @@ public class InputManager : MonoBehaviour
         input.Player.ToggleExperiment.performed += OnToggleExperiment;
         input.Player.ToggleInventory.performed += OnToggleInventory;
         input.Player.ToggleJournal.performed += OnToggleJournal;
-        input.Player.ToggleShop.performed += OnToggleShop;
         input.Player.MoveToHotbar.performed += OnMoveToHotbar;
+        input.Player.ToggleShop.performed += OnToggleShop;
         input.Player.MoveToInv.performed += OnMoveToInv;
         input.Player.Close.performed += OnClose;
 
@@ -113,14 +113,6 @@ public class InputManager : MonoBehaviour
     }
     void OnDisable()
     {
-        input.Player.ToggleExperiment.performed -= OnToggleExperiment;
-        input.Player.ToggleInventory.performed -= OnToggleInventory;
-        input.Player.ToggleJournal.performed -= OnToggleJournal;
-        input.Player.ToggleShop.performed -= OnToggleShop;
-        input.Player.MoveToHotbar.performed -= OnMoveToHotbar;
-        input.Player.MoveToInv.performed -= OnMoveToInv;
-        input.Player.Close.performed -= OnClose;
-
         input.Hotbar.Slot1.performed -= OnSlot1;
         input.Hotbar.Slot2.performed -= OnSlot2;
         input.Hotbar.Slot3.performed -= OnSlot3;
@@ -131,6 +123,15 @@ public class InputManager : MonoBehaviour
         input.Hotbar.Slot8.performed -= OnSlot8;
         input.Hotbar.Slot9.performed -= OnSlot9;
         input.Hotbar.Slot0.performed -= OnSlot0;
+
+        input.Player.Close.performed -= OnClose;
+        input.Player.MoveToInv.performed -= OnMoveToInv;
+        input.Player.ToggleShop.performed -= OnToggleShop;
+        input.Player.MoveToHotbar.performed -= OnMoveToHotbar;
+        input.Player.ToggleJournal.performed -= OnToggleJournal;
+        input.Player.ToggleInventory.performed -= OnToggleInventory;
+        input.Player.ToggleExperiment.performed -= OnToggleExperiment;
+
 
         input.Player.Disable();
         input.Hotbar.Disable();
