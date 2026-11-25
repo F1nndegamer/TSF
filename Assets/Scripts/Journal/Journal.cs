@@ -40,7 +40,6 @@ public class Journal : MonoBehaviour
     private void OnDestroy()
     {
         InputManager.instance.ToggleJournal -= ToggleJournal;
-        InputManager.instance.Close -= CloseJournal;
     }
 
     void Start()
@@ -53,7 +52,6 @@ public class Journal : MonoBehaviour
             discoveryPopup.SetActive(false);
 
         InputManager.instance.ToggleJournal += ToggleJournal;
-        InputManager.instance.Close += CloseJournal;
     }
     public void CloseJournal()
     {
@@ -66,6 +64,11 @@ public class Journal : MonoBehaviour
     }
     public void SetJournalOpen(bool open)
     {
+        if (open)
+        {
+            if (GameManager.IsInventoryOpen)
+                return;
+        }
         journalPanel.SetActive(open);
         GameManager.IsInventoryOpen = open;
         MouseToGrid.Instance.ChangeCursor(open);

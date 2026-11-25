@@ -45,14 +45,14 @@ public class ExperimentManager : MonoBehaviour
     {
         instance = this;
     }
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
 
         InputManager.instance.ToggleShop -= ToggleExperiment;
-        InputManager.instance.Close -= CloseExperiment;
     }
     public void CloseExperiment()
     {
-        if(experimentPanel.activeSelf)
+        if (experimentPanel.activeSelf)
             ToggleExperiment();
     }
     void Start()
@@ -75,7 +75,6 @@ public class ExperimentManager : MonoBehaviour
         if (experimentPanel != null) experimentPanel.SetActive(false);
 
         InputManager.instance.ToggleExperiment += ToggleExperiment;
-        InputManager.instance.Close += CloseExperiment;
 
         RefreshSlotsUI();
     }
@@ -85,6 +84,11 @@ public class ExperimentManager : MonoBehaviour
     }
     public void SetExperimentOpen(bool open)
     {
+        if (open)
+        {
+            if(GameManager.IsInventoryOpen)
+                return;
+        }
         if (experimentPanel == null) return;
         experimentPanel.SetActive(open);
         GameManager.IsInventoryOpen = open;

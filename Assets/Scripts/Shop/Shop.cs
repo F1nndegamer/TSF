@@ -63,12 +63,11 @@ public class Shop : MonoBehaviour
             shopPanel.SetActive(false);
 
         InputManager.instance.ToggleShop += ToggleShop;
-        InputManager.instance.Close += Close;
     }
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
 
         InputManager.instance.ToggleShop -= ToggleShop;
-        InputManager.instance.Close -= Close;
     }
     public void Close()
     {
@@ -81,6 +80,11 @@ public class Shop : MonoBehaviour
     }
     public void SetShopOpen(bool open)
     {
+        if (open)
+        {
+            if (GameManager.IsInventoryOpen)
+                return;
+        }
         shopPanel.SetActive(open);
         GameManager.IsInventoryOpen = open;
         MouseToGrid.Instance.ChangeCursor(open);

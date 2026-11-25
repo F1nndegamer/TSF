@@ -1,8 +1,7 @@
 using System;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
@@ -142,7 +141,18 @@ public class InputManager : MonoBehaviour
     {
         input.Dispose();
     }
-
+    public IEnumerable<InputAction> Getactions()
+    {
+        if(input == null) yield break;
+        yield return input.Player.Move;
+        yield return input.Player.Sprint;
+        yield return input.Player.ToggleInventory;
+        yield return input.Player.ToggleJournal;
+        yield return input.Player.ToggleShop;
+        yield return input.Player.ToggleExperiment;
+        yield return input.Player.MoveToHotbar;
+        yield return input.Player.MoveToInv;
+    }
     private void OnToggleExperiment(InputAction.CallbackContext ctx) => ToggleExperiment?.Invoke();
 
     private void OnToggleInventory(InputAction.CallbackContext ctx) => ToggleInventory?.Invoke();

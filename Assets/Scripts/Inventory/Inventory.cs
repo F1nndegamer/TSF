@@ -55,9 +55,8 @@ public class Inventory : MonoBehaviour
             int index = i;
             containerParent.GetChild(i).GetComponent<Button>()?.onClick.AddListener(() => SelectSlot(index));
         }
-        InputManager.instance.ToggleInventory += switchInventory;
+        InputManager.instance.ToggleInventory += SwitchInventory;
         InputManager.instance.MoveToHotbar += MoveToHotbar;
-        InputManager.instance.Close += HandleCloseInventory;
     }
     void Awake()
     {
@@ -65,15 +64,13 @@ public class Inventory : MonoBehaviour
     }
     private void OnDestroy()
     {
-        InputManager.instance.ToggleInventory -= switchInventory;
+        InputManager.instance.ToggleInventory -= SwitchInventory;
         InputManager.instance.MoveToHotbar -= MoveToHotbar;
-        InputManager.instance.Close -= HandleCloseInventory;
     }
-
     public Dictionary<PlantData, int> GetAllPlants()
     {
         return plants;
-    }
+    }    
     public void MoveToHotbar()
     {
         if (SelectedPlantData == null)
@@ -87,20 +84,28 @@ public class Inventory : MonoBehaviour
             MovePlantToHotBar(SelectedPlantData);
         }
     }
+    public void SwitchInventory()
+    {
+        SetInventory(!inventoryPanel.activeSelf);
+    }
     public void HandleCloseInventory()
     {
         if (inventoryPanel.gameObject.activeSelf)
         {
-            switchInventory();
+            SetInventory(false);
         }
     }
-    public void switchInventory()
+    public void SetInventory(bool open)
     {
-        GameManager.IsInventoryOpen = !GameManager.IsInventoryOpen; //Set Gamemanager to correct state
-        bool isOpen = GameManager.IsInventoryOpen; //IsOpen will be set to correct state
-        inventoryPanel.SetActive(isOpen);
-        MouseToGrid.Instance.ChangeCursor(isOpen); //if isOpen force the cursor to be visible
-        if (isOpen)
+        if (open)
+        {
+            if (GameManager.IsInventoryOpen)
+                return;
+        }
+        GameManager.IsInventoryOpen = open; //Set Gamemanager to correct state
+        inventoryPanel.SetActive(open);
+        MouseToGrid.Instance.ChangeCursor(open); //if isOpen force the cursor to be visible
+        if (open)
             InitialiseInv();
     }
 

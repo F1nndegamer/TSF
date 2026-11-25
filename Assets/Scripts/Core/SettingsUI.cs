@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class SettingsUI : MonoBehaviour
@@ -34,9 +36,13 @@ public class SettingsUI : MonoBehaviour
 
     public bool pauseTimeWhenOpen = true;
 
+    public Transform hotkeyContentParent;
+    public GameObject hotkeyRowPrefab;
+
     private const string MusicVolKey = "MusicVolume";
     private const string SfxVolKey = "SfxVolume";
     private const string FullscreenKey = "FullscreenEnabled";
+
     [ContextMenu("Get hotkeys")]
     private void FindHotKeyRows()
     {
@@ -64,11 +70,10 @@ public class SettingsUI : MonoBehaviour
         if (fullscreenToggleButton != null)
             fullscreenToggleButton.onClick.AddListener(ToggleFullScreen);
         if (quitButton != null)
-
             quitButton.onClick.AddListener(QuitGame);
 
+        GenerateHotkeyRow();
         LoadGeneralSettings();
-
         if (musicSlider != null)
         {
             musicSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
@@ -77,19 +82,14 @@ public class SettingsUI : MonoBehaviour
         {
             sfxSlider.onValueChanged.AddListener(OnSfxVolumeChanged);
         }
-        if (InputManager.instance != null)
-        {
-            InputManager.instance.Close += HandleEscapePressed;
-        }
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);
         }
     }
+
     private void OnDestroy()
     {
-        if (InputManager.instance != null)
-            InputManager.instance.Close -= HandleEscapePressed;
         if (pauseTimeWhenOpen)
             Time.timeScale = 1f;
     }
@@ -103,6 +103,8 @@ public class SettingsUI : MonoBehaviour
             SetSettingsOpen(false);
             return;
         }
+        if (Inventory.instance.inventoryPanel.activeSelf)
+            return;
 
         if (!GameManager.IsInventoryOpen)
         {
@@ -141,7 +143,12 @@ public class SettingsUI : MonoBehaviour
         controlsTabImage.sprite = showGeneral ? inactiveTabSprite : activeTabsprite;
         generalTabImage.sprite = showGeneral ? activeTabsprite : inactiveTabSprite;
         if (!showGeneral)
-            RefreshAllHotkeys();
+        {
+            if (hotkeyRows == null || hotkeyRows.Length == 0)
+                GenerateHotkeyRow();
+            else
+                RefreshAllHotkeys();
+        }
     }
     public void RefreshAllHotkeys()
     {
@@ -153,6 +160,35 @@ public class SettingsUI : MonoBehaviour
                 row.RefreshUI();
         }
     }
+    public void GenerateHotkeyRow()
+    {
+        for (int i = hotkeyContentParent.childCount - 1; i >= 0; i--)
+        {
+            GameObject oldChild = hotkeyContentParent.GetChild(i).gameObject;
+            oldChild.SetActive(false);
+            Destroy(oldChild);
+        }
+
+        List<InputRebind> spawnedRows = new();
+        foreach (InputAction action in InputManager.instance.Getactions())
+        {
+            GameObject rowObj = Instantiate(hotkeyRowPrefab, hotkeyContentParent);
+            InputRebind rebind = rowObj.GetComponentInChildren<InputRebind>();
+
+            rebind.actionPath = action.actionMap.name + "/" + action.name;
+            rebind.labelName = action.name;
+            rebind.RefreshUI();
+            spawnedRows.Add(rebind);
+        }
+        hotkeyRows = spawnedRows.ToArray();
+        //I honestly have no clue what the next lines do, but a stranger online suggested it and it works, so.... idc
+        Canvas.ForceUpdateCanvases();
+        if (hotkeyContentParent is RectTransform contentRect)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        }
+    }
+
     public void ResetAllHotKeys()
     {
         InputManager.instance.ResetBinding();
