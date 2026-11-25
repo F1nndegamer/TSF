@@ -39,11 +39,13 @@ public class Inventory : MonoBehaviour
     private Dictionary<PlantData, int> plants = new();
     public static Inventory instance;
     private GameObject SelectedItem;
-    private bool SelectedSeeds;
+    [HideInInspector] public bool SelectedSeeds;
     public PlantData SelectedPlantData;
     private List<(string details, Tabs category, PlantData data)> slotData = new();
 
     private int InvSelected;
+
+    
     private void Start()
     {
         tabParent.GetChild(0).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.All));
@@ -57,6 +59,11 @@ public class Inventory : MonoBehaviour
         }
         InputManager.instance.ToggleInventory += SwitchInventory;
         InputManager.instance.MoveToHotbar += MoveToHotbar;
+        foreach(PlantData data in plants.Keys)
+        {
+            data.seeds.location = Location.Inventory;
+            data.location = Location.Inventory;
+        }
     }
     void Awake()
     {
