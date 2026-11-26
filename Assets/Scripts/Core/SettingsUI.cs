@@ -55,6 +55,7 @@ public class SettingsUI : MonoBehaviour
 
     void Start()
     {
+        ResetAllHotKeys();
         if (controlsTabButton != null)
             controlsTabButton.onClick.AddListener(() => SwitchTab(showGeneral: false));
         if (generalTabButton != null)
@@ -87,53 +88,30 @@ public class SettingsUI : MonoBehaviour
             settingsPanel.SetActive(false);
         }
     }
-
-    private void OnDestroy()
-    {
-        if (pauseTimeWhenOpen)
-            Time.timeScale = 1f;
-    }
-    private void HandleEscapePressed()
-    {
-        //So set false when: its active, set active if gamemanager.isinvopen = false
-        if (settingsPanel == null) return;
-
-        if (settingsPanel.activeSelf)
-        {
-            SetSettingsOpen(false);
-            return;
-        }
-        if (Inventory.instance.inventoryPanel.activeSelf)
-            return;
-
-        if (!GameManager.IsInventoryOpen)
-        {
-            SetSettingsOpen(true);
-        }
-    }
     public void ToggleSettings()
     {
-        if (settingsPanel == null) return;
-        SetSettingsOpen(!settingsPanel.activeSelf);
-    }
-    public void SetSettingsOpen(bool open)
-    {
-        if (settingsPanel == null) return;
-        settingsPanel.SetActive(open);
-        GameManager.IsInventoryOpen = open;
-
-        MouseToGrid.Instance.ChangeCursor(open);
-
-        if (pauseTimeWhenOpen)
-            Time.timeScale = open ? 0f : 1f;
-
-        statusText.text = "";
-        if (open)
+        if(UIManager.instance.TogglePanel(UIPanel.Settings))
         {
             SwitchTab(showGeneral: false);
             RefreshAllHotkeys();
             RefreshFullscreenLabel();
         }
+    }
+    public void SetSettingsOpen(bool open)
+    {
+        if (open)
+        {
+            if(!UIManager.instance.OpenPanel(UIPanel.Settings))
+                return;
+            SwitchTab(showGeneral: false);
+            RefreshAllHotkeys();
+            RefreshFullscreenLabel();
+        }
+        else
+        {
+            UIManager.instance.ClosePanel(UIPanel.Settings);
+        }
+        statusText.text = "";
     }
 
     public void SwitchTab(bool showGeneral)

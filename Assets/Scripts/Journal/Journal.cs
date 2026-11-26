@@ -37,11 +37,6 @@ public class Journal : MonoBehaviour
         instance = this;
     }
 
-    private void OnDestroy()
-    {
-        InputManager.instance.ToggleJournal -= ToggleJournal;
-    }
-
     void Start()
     {
         if (closeButton != null)
@@ -50,33 +45,29 @@ public class Journal : MonoBehaviour
             journalPanel.SetActive(false);
         if (discoveryPopup != null)
             discoveryPopup.SetActive(false);
-
-        InputManager.instance.ToggleJournal += ToggleJournal;
-    }
-    public void CloseJournal()
-    {
-        if (journalPanel.activeSelf)
-            SetJournalOpen(!journalPanel.activeSelf);
     }
     public void ToggleJournal()
     {
-        SetJournalOpen(!journalPanel.activeSelf);
+        if(UIManager.instance.TogglePanel(UIPanel.Journal))
+        {
+            if(selectedCrop == null && allCrops.Count > 0)
+                selectedCrop = allCrops[0];
+            RefreshJournalUI();
+        }
     }
     public void SetJournalOpen(bool open)
     {
         if (open)
         {
-            if (GameManager.IsInventoryOpen)
+            if (!UIManager.instance.OpenPanel(UIPanel.Journal))
                 return;
-        }
-        journalPanel.SetActive(open);
-        GameManager.IsInventoryOpen = open;
-        MouseToGrid.Instance.ChangeCursor(open);
-        if (open)
-        {
-            if (selectedCrop == null && allCrops.Count > 0)
+            if(selectedCrop == null && allCrops.Count > 0)
                 selectedCrop = allCrops[0];
             RefreshJournalUI();
+        }
+        else
+        {
+            UIManager.instance.ClosePanel(UIPanel.Journal);
         }
     }
     public bool isDiscovered(PlantData data)

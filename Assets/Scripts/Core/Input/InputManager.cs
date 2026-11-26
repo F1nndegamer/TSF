@@ -73,7 +73,7 @@ public class InputManager : MonoBehaviour
         });
         rebindingOperation.Start();
     }
-    
+
     public string GetBinding(string actionPath)
     {
         return input.asset.FindAction(actionPath)?.GetBindingDisplayString();

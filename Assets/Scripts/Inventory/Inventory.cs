@@ -45,7 +45,7 @@ public class Inventory : MonoBehaviour
 
     private int InvSelected;
 
-    
+
     private void Start()
     {
         tabParent.GetChild(0).GetComponent<Button>().onClick.AddListener(() => SwitchTabs(Tabs.All));
@@ -59,7 +59,7 @@ public class Inventory : MonoBehaviour
         }
         InputManager.instance.ToggleInventory += SwitchInventory;
         InputManager.instance.MoveToHotbar += MoveToHotbar;
-        foreach(PlantData data in plants.Keys)
+        foreach (PlantData data in plants.Keys)
         {
             data.seeds.location = Location.Inventory;
             data.location = Location.Inventory;
@@ -77,7 +77,7 @@ public class Inventory : MonoBehaviour
     public Dictionary<PlantData, int> GetAllPlants()
     {
         return plants;
-    }    
+    }
     public void MoveToHotbar()
     {
         if (SelectedPlantData == null)
@@ -93,27 +93,21 @@ public class Inventory : MonoBehaviour
     }
     public void SwitchInventory()
     {
-        SetInventory(!inventoryPanel.activeSelf);
-    }
-    public void HandleCloseInventory()
-    {
-        if (inventoryPanel.gameObject.activeSelf)
-        {
-            SetInventory(false);
-        }
+        if (UIManager.instance.TogglePanel(UIPanel.Inventory))
+            InitialiseInv();
     }
     public void SetInventory(bool open)
     {
         if (open)
         {
-            if (GameManager.IsInventoryOpen)
-                return;
+            if (UIManager.instance.OpenPanel(UIPanel.Inventory))
+                InitialiseInv();
         }
-        GameManager.IsInventoryOpen = open; //Set Gamemanager to correct state
-        inventoryPanel.SetActive(open);
-        MouseToGrid.Instance.ChangeCursor(open); //if isOpen force the cursor to be visible
-        if (open)
-            InitialiseInv();
+        else
+        {
+            UIManager.instance.ClosePanel(UIPanel.Inventory);
+        }
+
     }
 
     private void SellPlants(PlantData data)
@@ -228,10 +222,8 @@ public class Inventory : MonoBehaviour
                 tabParent.transform.GetChild(3).GetComponent<Image>().sprite = activeTab;
                 break;
         }
-        if (GameManager.IsInventoryOpen)
-        {
+        if(UIManager.instance.IsOpen(UIPanel.Inventory))
             InitialiseInv();
-        }
     }
 
     #region PlantInv

@@ -9693,6 +9693,56 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &463732043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 463732044}
+  - component: {fileID: 463732045}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &463732044
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463732043}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 557041634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &463732045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463732043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598f15313524da76b86d78ba76d408eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  inventoryPanel: {fileID: 1412290840}
+  settingsPanel: {fileID: 1768501604}
+  journalPanel: {fileID: 766816651}
+  shopPanel: {fileID: 824630494}
+  experimentpanel: {fileID: 1729752471}
+  pauseTimeWhenSettings: 1
 --- !u!1 &474822088
 GameObject:
   m_ObjectHideFlags: 0
@@ -10096,6 +10146,7 @@ MonoBehaviour:
   inactiveTab: {fileID: 21300000, guid: fbc074267c538e17ba74d9105179089f, type: 3}
   activeContainer: {fileID: 21300000, guid: 2e39720d2e323561e9fef121eb38c03c, type: 3}
   inactiveContainer: {fileID: 21300000, guid: c5dfaa05c18f27150b60d7cef44d067d, type: 3}
+  SelectedSeeds: 0
   SelectedPlantData: {fileID: 0}
 --- !u!1 &499147098
 GameObject:
@@ -11191,6 +11242,7 @@ Transform:
   - {fileID: 912280183}
   - {fileID: 1561138637}
   - {fileID: 938564154}
+  - {fileID: 463732044}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &567822232

@@ -30,15 +30,15 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        CloseAllPanels();
     }
     void Start()
     {
+        CloseAllPanels();
         InputManager.instance.Close += HandleEscape;
     }
     void OnDestroy()
     {
-        InputManager.instance.Close += HandleEscape;
+        InputManager.instance.Close -= HandleEscape;
         Time.timeScale = 1f;
     }
     private GameObject GetPanel(UIPanel panel)
@@ -110,6 +110,8 @@ public class UIManager : MonoBehaviour
     {
         if (HasOpenPanel())
             CloseCurrentPanel();
+        else
+            SettingsUI.instance.ToggleSettings();
     }
     private void CloseAllPanels()
     {

@@ -47,13 +47,7 @@ public class ExperimentManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-
-        InputManager.instance.ToggleShop -= ToggleExperiment;
-    }
-    public void CloseExperiment()
-    {
-        if (experimentPanel.activeSelf)
-            ToggleExperiment();
+        InputManager.instance.ToggleExperiment -= ToggleExperiment;
     }
     void Start()
     {
@@ -80,24 +74,26 @@ public class ExperimentManager : MonoBehaviour
     }
     public void ToggleExperiment()
     {
-        SetExperimentOpen(!experimentPanel.activeSelf);
+        if(UIManager.instance.TogglePanel(UIPanel.Experiment))
+        {
+            SwitchSubTab(showRecipeBook: false);
+            RebuildCropPicker();
+            RefreshSlotsUI();
+        }
     }
     public void SetExperimentOpen(bool open)
     {
         if (open)
         {
-            if(GameManager.IsInventoryOpen)
+            if(!UIManager.instance.OpenPanel(UIPanel.Experiment))
                 return;
-        }
-        if (experimentPanel == null) return;
-        experimentPanel.SetActive(open);
-        GameManager.IsInventoryOpen = open;
-        MouseToGrid.Instance.ChangeCursor(open);
-        if (open)
-        {
             SwitchSubTab(showRecipeBook: false);
             RebuildCropPicker();
             RefreshSlotsUI();
+        }
+        else
+        {
+            UIManager.instance.ClosePanel(UIPanel.Experiment);
         }
     }
     public void SwitchSubTab(bool showRecipeBook)

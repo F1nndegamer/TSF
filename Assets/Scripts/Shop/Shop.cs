@@ -69,35 +69,34 @@ public class Shop : MonoBehaviour
 
         InputManager.instance.ToggleShop -= ToggleShop;
     }
-    public void Close()
-    {
-        if (shopPanel.activeSelf)
-            SetShopOpen(!shopPanel.activeSelf);
-    }
     public void ToggleShop()
     {
-        SetShopOpen(!shopPanel.activeSelf);
+        if(UIManager.instance.TogglePanel(UIPanel.Shop))
+            RefreshShop();
     }
     public void SetShopOpen(bool open)
     {
         if (open)
         {
-            if (GameManager.IsInventoryOpen)
+            if(!UIManager.instance.OpenPanel(UIPanel.Shop))
                 return;
+            RefreshShop();
         }
-        shopPanel.SetActive(open);
-        GameManager.IsInventoryOpen = open;
-        MouseToGrid.Instance.ChangeCursor(open);
-        if (open)
+        else
         {
-            Quantity = 1;
-            RefreshMoneyUI();
-            RebuildList();
-            if (shopitems.Count > 0)
-                SelectItem(shopitems[0]);
-            else
-                ClearDetails();
+            UIManager.instance.ClosePanel(UIPanel.Shop);
         }
+    }
+    private void RefreshShop()
+    {
+        Quantity = 1;
+        RefreshMoneyUI();
+        RebuildList();
+
+        if(shopitems.Count > 0)
+            SelectItem(shopitems[0]);
+        else
+            ClearDetails();
     }
     public void SetMode(bool sellMode)
     {
@@ -247,7 +246,7 @@ public class Shop : MonoBehaviour
         }
         RefreshMoneyUI();
         RefreshDetails();
-        if (GameManager.IsInventoryOpen && Inventory.instance.inventoryPanel.activeSelf)
+        if (UIManager.instance.IsOpen(UIPanel.Inventory))
         {
             Inventory.instance.InitialiseInv();
         }
