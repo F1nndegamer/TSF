@@ -41,10 +41,13 @@ public class Journal : MonoBehaviour
     {
         if (closeButton != null)
             closeButton.onClick.AddListener(() => SetJournalOpen(false));
-        if (journalPanel != null)
-            journalPanel.SetActive(false);
         if (discoveryPopup != null)
             discoveryPopup.SetActive(false);
+
+        InputManager.instance.ToggleJournal += ToggleJournal;
+    }
+    private void OnDestroy() {
+        InputManager.instance.ToggleJournal -= ToggleJournal;
     }
     public void ToggleJournal()
     {
@@ -84,7 +87,7 @@ public class Journal : MonoBehaviour
         {
             StartCoroutine(ShowDiscovery(plata));
         }
-        if (journalPanel != null && journalPanel.activeSelf)
+        if (UIManager.instance.IsOpen(UIPanel.Journal))
         {
             RefreshJournalUI();
         }

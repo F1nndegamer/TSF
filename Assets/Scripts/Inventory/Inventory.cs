@@ -13,6 +13,8 @@ using System.ComponentModel;
 using UnityEditor;
 using System.Runtime.CompilerServices;
 using UnityEngine.Rendering;
+using UnityEngine.U2D;
+using Unity.Mathematics;
 public enum Tabs
 {
     All,
@@ -37,7 +39,7 @@ public class Inventory : MonoBehaviour
     public Sprite inactiveTab;
     public Sprite activeContainer;
     public Sprite inactiveContainer;
-
+    public Button clsoeButton;
     private Tabs currentTab = Tabs.All;
     private List<GameObject> activeSlots = new();
 
@@ -58,7 +60,7 @@ public class Inventory : MonoBehaviour
     private bool heldIsSeed;
     private Sprite heldSprite;
     private int heldFromInvSlot = -1;
-
+    private int heldFromHotbarSlot = -1;
 
     private void Start()
     {
@@ -71,6 +73,11 @@ public class Inventory : MonoBehaviour
             int index = i;
             containerParent.GetChild(i).GetComponent<Button>()?.onClick.AddListener(() => OnInventorySlotClicked(index));
         }
+        for (int i = 0; i < hotbarpParent.childCount; i++)
+        {
+            int index = i;
+            hotbarpParent.GetChild(i).GetComponent<Button>()?.onClick.AddListener(() => OnHotbarSlotClicked(index));
+        }
         dragCurorImage.raycastTarget = false;
         dragCurorImage.gameObject.SetActive(false);
         InputManager.instance.ToggleInventory += SwitchInventory;
@@ -80,6 +87,7 @@ public class Inventory : MonoBehaviour
             data.seeds.location = Location.Inventory;
             data.location = Location.Inventory;
         }
+        clsoeButton.onClick.AddListener(() => SetInventory(false));
     }
     void Awake()
     {
@@ -89,6 +97,7 @@ public class Inventory : MonoBehaviour
     {
         InputManager.instance.ToggleInventory -= SwitchInventory;
         InputManager.instance.MoveToHotbar -= MoveToHotbar;
+        clsoeButton.onClick.RemoveAllListeners();
     }
     void Update()
     {
@@ -156,7 +165,6 @@ public class Inventory : MonoBehaviour
         }
 
     }
-
     private void SellPlants(PlantData data)
     {
         int amount = TryGetPlant(data);
@@ -250,6 +258,55 @@ public class Inventory : MonoBehaviour
         TileUpdater.instance.DrawHotBar();
         SelectSlot(Mathf.Clamp(InvSelected, 0, Mathf.Max(0, containerParent.childCount - 1)));
     }
+
+    public void OnHotbarSlotClicked(int index)
+    {
+        TileUpdater.instance.SelectTool(index + 1);
+        if (isHoldingItem)
+        {
+            PlaceHeldItemInHotbar(index);
+            return;
+        }
+
+        if (TileUpdater.instance == null || index < 0 || index >= TileUpdater.instance.barslots.Count)
+            return;
+        var barslots = TileUpdater.instance.barslots[index];
+        if (barslots == null || barslots.data == null)
+            return;
+        bool isSeed = barslots.function == Function.Seeds;
+        Sprite sprite = barslots.sprite != null
+            ? barslots.sprite
+            : (isSeed ? barslots.data.seeds.seedinventorySprite : barslots.data.inventorySprite);
+        if (sprite == null)
+            return;
+
+        isHoldingItem = true;
+        heldPlantData = barslots.data;
+        heldIsSeed = isSeed;
+        heldSprite = sprite;
+        heldFromInvSlot = -1;
+        heldFromHotbarSlot = index;
+        if (dragCurorImage != null)
+        {
+            RectTransform cursorRect = dragCurorImage.rectTransform;
+            if (hotbarpParent != null && index < hotbarpParent.childCount)
+            {
+                RectTransform sourceRect = hotbarpParent.GetChild(index) as RectTransform;
+                if (sourceRect != null)
+                {
+                    Vector3[] corners = new Vector3[4];
+                    sourceRect.GetWorldCorners(corners);
+                    float width = Vector3.Distance(corners[0], corners[3]);
+                    float height = Vector3.Distance(corners[0], corners[1]);
+                    cursorRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                    cursorRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+                }
+            }
+            dragCurorImage.sprite = heldSprite;
+            dragCurorImage.gameObject.SetActive(true);
+            MoveDragCursor();
+        }
+    }
     public void OnInventorySlotClicked(int index)
     {
         SelectSlot(index);
@@ -306,13 +363,19 @@ public class Inventory : MonoBehaviour
         {
             if (heldIsSeed)
             {
+                int oldHotbar = heldFromHotbarSlot >= 0 ? heldFromHotbarSlot : heldPlantData.seeds.HotBarSlot;
                 heldPlantData.seeds.location = Location.Inventory;
                 heldPlantData.seeds.HotBarSlot = -1;
+                if (oldHotbar >= 0 && oldHotbar < TileUpdater.instance.barslots.Count)
+                    TileUpdater.instance.barslots[oldHotbar].ClearSlot();
             }
             else
             {
+                int oldHotbar = heldFromHotbarSlot >= 0 ? heldFromHotbarSlot : heldPlantData.HotBarSlot;
                 heldPlantData.location = Location.Inventory;
                 heldPlantData.HotBarSlot = -1;
+                if (oldHotbar >= 0 && oldHotbar < TileUpdater.instance.barslots.Count)
+                    TileUpdater.instance.barslots[oldHotbar].ClearSlot();
             }
         }
         if (targetindex >= 0 && targetindex < slotData.Count)
@@ -337,41 +400,63 @@ public class Inventory : MonoBehaviour
     {
         if (!isHoldingItem || heldPlantData == null)
             return;
-        if (hotbarIndex < 0 || hotbarIndex >= TileUpdater.instance.barslots.Count)
+        if (TileUpdater.instance == null || hotbarIndex < 0 || hotbarIndex >= TileUpdater.instance.barslots.Count)
             return;
+
+        int previousSlot = heldIsSeed
+            ? (heldFromHotbarSlot >= 0 ? heldFromHotbarSlot : (heldPlantData.seeds.location == Location.hotBar ? heldPlantData.seeds.HotBarSlot : -1))
+            : (heldFromHotbarSlot >= 0 ? heldFromHotbarSlot : (heldPlantData.location == Location.hotBar ? heldPlantData.HotBarSlot : -1));
+
+        if (previousSlot >= 0 && previousSlot < TileUpdater.instance.barslots.Count && previousSlot != hotbarIndex)
+        {
+            TileUpdater.instance.barslots[previousSlot].ClearSlot();
+        }
+        if (TileUpdater.instance.barslots[hotbarIndex].data != heldPlantData)
+        {
+            ReleaseHotbarSlotItem(hotbarIndex);
+        }
 
         if (heldIsSeed)
         {
-            if (heldPlantData.seeds.location == Location.hotBar &&
-                heldPlantData.seeds.HotBarSlot >= 0 &&
-                heldPlantData.HotBarSlot < TileUpdater.instance.barslots.Count)
-            {
-                TileUpdater.instance.barslots[heldPlantData.seeds.HotBarSlot].ClearSlot();
-            }
             heldPlantData.seeds.location = Location.hotBar;
             heldPlantData.seeds.HotBarSlot = hotbarIndex;
             TileUpdater.instance.barslots[hotbarIndex].function = Function.Seeds;
             TileUpdater.instance.barslots[hotbarIndex].data = heldPlantData;
             TileUpdater.instance.barslots[hotbarIndex].sprite = heldPlantData.seeds.seedinventorySprite;
-
         }
         else
         {
-            if (heldPlantData.location == Location.hotBar &&
-                heldPlantData.HotBarSlot >= 0 &&
-                heldPlantData.HotBarSlot < TileUpdater.instance.barslots.Count)
-            {
-                TileUpdater.instance.barslots[heldPlantData.HotBarSlot].ClearSlot();
-            }
             heldPlantData.location = Location.hotBar;
             heldPlantData.HotBarSlot = hotbarIndex;
             TileUpdater.instance.barslots[hotbarIndex].function = Function.Plant;
             TileUpdater.instance.barslots[hotbarIndex].data = heldPlantData;
             TileUpdater.instance.barslots[hotbarIndex].sprite = heldPlantData.inventorySprite;
         }
+
         ClearHeldState();
         TileUpdater.instance.DrawHotBar();
         InitialiseInv();
+    }
+    private void ReleaseHotbarSlotItem(int hotbarIndex)
+    {
+        if (TileUpdater.instance == null || hotbarIndex < 0 || hotbarIndex >= TileUpdater.instance.barslots.Count)
+            return;
+        var targetSlot = TileUpdater.instance.barslots[hotbarIndex];
+        if (targetSlot == null || targetSlot.data == null)
+            return;
+
+        if (targetSlot.function == Function.Seeds && targetSlot.data.seeds.HotBarSlot == hotbarIndex)
+        {
+            targetSlot.data.seeds.location = Location.Inventory;
+            targetSlot.data.seeds.HotBarSlot = -1;
+        }
+        else if (targetSlot.function == Function.Plant && targetSlot.data.HotBarSlot == hotbarIndex)
+        {
+            targetSlot.data.location = Location.Inventory;
+            targetSlot.data.HotBarSlot = -1;
+        }
+        targetSlot.ClearSlot();
+
     }
     public void CancelItemHeld()
     {
@@ -388,6 +473,7 @@ public class Inventory : MonoBehaviour
         heldIsSeed = false;
         heldSprite = null;
         heldFromInvSlot = -1;
+        heldFromHotbarSlot = -1;
         if (dragCurorImage != null)
         {
             dragCurorImage.sprite = null;

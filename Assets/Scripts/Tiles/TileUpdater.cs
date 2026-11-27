@@ -100,7 +100,7 @@ public class TileUpdater : MonoBehaviour
             Inventory.instance.MovePlantToInv(activeBarSlot.data);
         }
     }
-    private void SelectTool(int invIndex)
+    public void SelectTool(int invIndex)
     {
         invIndex = invIndex == 0 ? 9 : invIndex - 1;
         if (invIndex < 0 || invIndex >= hotBarContainerParent.childCount || invIndex >= hotBaritemParent.childCount)
