@@ -10,6 +10,9 @@ using TMPro;
 using System;
 using Unity.VisualScripting;
 using System.ComponentModel;
+using UnityEditor;
+using System.Runtime.CompilerServices;
+using UnityEngine.Rendering;
 public enum Tabs
 {
     All,
@@ -27,23 +30,34 @@ public class Inventory : MonoBehaviour
     public GameObject slotPrefab;
     public Transform hotbarpParent;
 
+    public Image dragCurorImage;
+
     public Transform tabParent;
     public Sprite activeTab;
     public Sprite inactiveTab;
     public Sprite activeContainer;
     public Sprite inactiveContainer;
+
     private Tabs currentTab = Tabs.All;
     private List<GameObject> activeSlots = new();
 
     private Dictionary<PlantData, int> seeds = new();
     private Dictionary<PlantData, int> plants = new();
     public static Inventory instance;
+
     private GameObject SelectedItem;
     [HideInInspector] public bool SelectedSeeds;
     public PlantData SelectedPlantData;
-    private List<(string details, Tabs category, PlantData data)> slotData = new();
+    private List<(string details, Tabs category, PlantData data)?> slotData = new();
+    private List<InventoryItem> slotItems = new();
 
     private int InvSelected;
+
+    private bool isHoldingItem;
+    private PlantData heldPlantData;
+    private bool heldIsSeed;
+    private Sprite heldSprite;
+    private int heldFromInvSlot = -1;
 
 
     private void Start()
@@ -55,8 +69,10 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < containerParent.childCount; i++)
         {
             int index = i;
-            containerParent.GetChild(i).GetComponent<Button>()?.onClick.AddListener(() => SelectSlot(index));
+            containerParent.GetChild(i).GetComponent<Button>()?.onClick.AddListener(() => OnInventorySlotClicked(index));
         }
+        dragCurorImage.raycastTarget = false;
+        dragCurorImage.gameObject.SetActive(false);
         InputManager.instance.ToggleInventory += SwitchInventory;
         InputManager.instance.MoveToHotbar += MoveToHotbar;
         foreach (PlantData data in plants.Keys)
@@ -73,6 +89,34 @@ public class Inventory : MonoBehaviour
     {
         InputManager.instance.ToggleInventory -= SwitchInventory;
         InputManager.instance.MoveToHotbar -= MoveToHotbar;
+    }
+    void Update()
+    {
+        if (isHoldingItem)
+        {
+            MoveDragCursor();
+        }
+    }
+    private void MoveDragCursor()
+    {
+        if (dragCurorImage == null || Pointer.current == null)
+            return;
+
+        Vector2 screenPos = Pointer.current.position.ReadValue();
+        RectTransform cursorRect = dragCurorImage.rectTransform;
+        RectTransform parentRect = cursorRect.parent as RectTransform;
+        Canvas canvas = dragCurorImage.canvas;
+        if (parentRect == null || canvas == null)
+        {
+            cursorRect.position = screenPos;
+            return;
+        }
+
+        Camera cam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, screenPos, cam, out Vector2 localPoint))
+        {
+            cursorRect.localPosition = localPoint;
+        }
     }
     public Dictionary<PlantData, int> GetAllPlants()
     {
@@ -95,6 +139,8 @@ public class Inventory : MonoBehaviour
     {
         if (UIManager.instance.TogglePanel(UIPanel.Inventory))
             InitialiseInv();
+        else
+            CancelItemHeld();
     }
     public void SetInventory(bool open)
     {
@@ -105,6 +151,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
+            CancelItemHeld();
             UIManager.instance.ClosePanel(UIPanel.Inventory);
         }
 
@@ -138,15 +185,20 @@ public class Inventory : MonoBehaviour
     }
     public void InitialiseInv()
     {
-        for (int i = itemParent.childCount - 1; i >= 0; i--)
+        for (int i = activeSlots.Count - 1; i >= 0; i--)
         {
-            GameObject childobj = itemParent.GetChild(i).gameObject;
-            childobj.SetActive(false);
-            Destroy(childobj);
+            if (activeSlots[i] != null)
+            {
+                activeSlots[i].SetActive(false);
+                Destroy(activeSlots[i]);
+            }
         }
         activeSlots.Clear();
         slotData.Clear();
-        void CreateSlots<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
+        slotItems.Clear();
+
+        List<(string details, Tabs category, PlantData data, int count, Sprite sprite)> entries = new();
+        void CollectEntries<T>(Dictionary<T, int> dictionary, Tabs itemCatagory) where T : PlantData
         {
             if (currentTab != Tabs.All && currentTab != itemCatagory)
                 return;
@@ -155,51 +207,223 @@ public class Inventory : MonoBehaviour
                 if (kvp.Value <= 0) continue;
                 if (itemCatagory == Tabs.Seeds) if (kvp.Key.seeds.location != Location.Inventory) continue;
                 if (itemCatagory == Tabs.Plants) if (kvp.Key.location != Location.Inventory) continue;
-                GameObject slotObj = Instantiate(slotPrefab, itemParent);
-                activeSlots.Add(slotObj);
-                InventoryItem item = slotObj.GetComponent<InventoryItem>();
-                String details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
-                slotData.Add((details, itemCatagory, kvp.Key));
-                item.countText.text = kvp.Value.ToString();
-                item.Sprite.sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
+
+                string details = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedDetails : kvp.Key.plantDetails;
+                Sprite sprite = itemCatagory == Tabs.Seeds ? kvp.Key.seeds.seedinventorySprite : kvp.Key.inventorySprite;
+                entries.Add((details, itemCatagory, kvp.Key, kvp.Value, sprite));
             }
         }
         if (currentTab == Tabs.All || currentTab == Tabs.Seeds)
         {
-            CreateSlots(seeds, Tabs.Seeds);
+            CollectEntries(seeds, Tabs.Seeds);
         }
         if (currentTab == Tabs.All || currentTab == Tabs.Plants)
         {
-            CreateSlots(plants, Tabs.Plants);
+            CollectEntries(plants, Tabs.Plants);
+        }
+
+        for (int i = 0; i < containerParent.childCount; i++)
+        {
+            Transform slotContainer = containerParent.GetChild(i);
+            if (i < entries.Count)
+            {
+                var entry = entries[i];
+                GameObject slotObj = Instantiate(slotPrefab, slotContainer);
+                // slotObj.transform.localPosition = Vector3.zero;
+                // slotObj.transform.localScale = Vector3.one;
+
+                activeSlots.Add(slotObj);
+                slotData.Add((entry.details, entry.category, entry.data));
+
+                InventoryItem item = slotObj.GetComponent<InventoryItem>();
+                item.countText.text = entry.count.ToString();
+                item.Sprite.sprite = entry.sprite;
+                item.Sprite.gameObject.SetActive(true);
+                slotItems.Add(item);
+            }
+            else
+            {
+                slotData.Add(null);
+                slotItems.Add(null);
+            }
         }
         TileUpdater.instance.DrawHotBar();
-        SelectSlot(InvSelected);
+        SelectSlot(Mathf.Clamp(InvSelected, 0, Mathf.Max(0, containerParent.childCount - 1)));
+    }
+    public void OnInventorySlotClicked(int index)
+    {
+        SelectSlot(index);
+        if (!isHoldingItem)
+        {
+            if (index < 0 || index >= slotData.Count || !slotData[index].HasValue)
+                return;
+            var clicked = slotData[index].Value;
+            isHoldingItem = true;
+            heldPlantData = clicked.data;
+            heldIsSeed = clicked.category == Tabs.Seeds;
+            heldFromInvSlot = index;
+
+            InventoryItem itemView = slotItems[index];
+            heldSprite = itemView != null ? itemView.Sprite.sprite : null;
+            if (itemView != null && itemView.Sprite != null)
+            {
+                itemView.Sprite.gameObject.SetActive(false);
+            }
+            if (dragCurorImage != null)
+            {
+                RectTransform sourceRect = itemView.Sprite.rectTransform;
+                RectTransform cursorRect = dragCurorImage.rectTransform;
+
+                Vector3[] corners = new Vector3[4];
+                sourceRect.GetWorldCorners(corners);
+
+                float width = Vector3.Distance(corners[0], corners[3]);
+                float height = Vector3.Distance(corners[0], corners[1]);
+
+                cursorRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                cursorRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+                dragCurorImage.sprite = heldSprite;
+                dragCurorImage.gameObject.SetActive(heldSprite != null);
+                if (Pointer.current != null)
+                {
+                    MoveDragCursor();
+                }
+            }
+        }
+        else
+        {
+            PlaceHeldItemInInventorySlot(index);
+        }
+    }
+    private void PlaceHeldItemInInventorySlot(int targetindex)
+    {
+        if (heldPlantData == null)
+        {
+            CancelItemHeld();
+            return;
+        }
+        if (heldFromInvSlot < 0)
+        {
+            if (heldIsSeed)
+            {
+                heldPlantData.seeds.location = Location.Inventory;
+                heldPlantData.seeds.HotBarSlot = -1;
+            }
+            else
+            {
+                heldPlantData.location = Location.Inventory;
+                heldPlantData.HotBarSlot = -1;
+            }
+        }
+        if (targetindex >= 0 && targetindex < slotData.Count)
+        {
+            var existingAtTarget = slotData[targetindex];
+            slotData[targetindex] = (
+                heldIsSeed ? heldPlantData.seeds.seedDetails : heldPlantData.plantDetails,
+                heldIsSeed ? Tabs.Seeds : Tabs.Plants,
+                heldPlantData
+            );
+
+            if (heldFromInvSlot >= 0 && heldFromInvSlot < slotData.Count && heldFromInvSlot != targetindex)
+            {
+                slotData[heldFromInvSlot] = existingAtTarget;
+            }
+        }
+        ClearHeldState();
+        TileUpdater.instance.DrawHotBar();
+        InitialiseInv();
+    }
+    public void PlaceHeldItemInHotbar(int hotbarIndex)
+    {
+        if (!isHoldingItem || heldPlantData == null)
+            return;
+        if (hotbarIndex < 0 || hotbarIndex >= TileUpdater.instance.barslots.Count)
+            return;
+
+        if (heldIsSeed)
+        {
+            if (heldPlantData.seeds.location == Location.hotBar &&
+                heldPlantData.seeds.HotBarSlot >= 0 &&
+                heldPlantData.HotBarSlot < TileUpdater.instance.barslots.Count)
+            {
+                TileUpdater.instance.barslots[heldPlantData.seeds.HotBarSlot].ClearSlot();
+            }
+            heldPlantData.seeds.location = Location.hotBar;
+            heldPlantData.seeds.HotBarSlot = hotbarIndex;
+            TileUpdater.instance.barslots[hotbarIndex].function = Function.Seeds;
+            TileUpdater.instance.barslots[hotbarIndex].data = heldPlantData;
+            TileUpdater.instance.barslots[hotbarIndex].sprite = heldPlantData.seeds.seedinventorySprite;
+
+        }
+        else
+        {
+            if (heldPlantData.location == Location.hotBar &&
+                heldPlantData.HotBarSlot >= 0 &&
+                heldPlantData.HotBarSlot < TileUpdater.instance.barslots.Count)
+            {
+                TileUpdater.instance.barslots[heldPlantData.HotBarSlot].ClearSlot();
+            }
+            heldPlantData.location = Location.hotBar;
+            heldPlantData.HotBarSlot = hotbarIndex;
+            TileUpdater.instance.barslots[hotbarIndex].function = Function.Plant;
+            TileUpdater.instance.barslots[hotbarIndex].data = heldPlantData;
+            TileUpdater.instance.barslots[hotbarIndex].sprite = heldPlantData.inventorySprite;
+        }
+        ClearHeldState();
+        TileUpdater.instance.DrawHotBar();
+        InitialiseInv();
+    }
+    public void CancelItemHeld()
+    {
+        if (!isHoldingItem)
+            return;
+        if (heldFromInvSlot >= 0 && heldFromInvSlot < slotItems.Count && slotItems[heldFromInvSlot] != null)
+            slotItems[heldFromInvSlot].Sprite.gameObject.SetActive(true);
+        ClearHeldState();
+    }
+    private void ClearHeldState()
+    {
+        isHoldingItem = false;
+        heldPlantData = null;
+        heldIsSeed = false;
+        heldSprite = null;
+        heldFromInvSlot = -1;
+        if (dragCurorImage != null)
+        {
+            dragCurorImage.sprite = null;
+            dragCurorImage.gameObject.SetActive(false);
+        }
     }
     public void SelectSlot(int index)
     {
+        if (containerParent == null || containerParent.childCount == 0)
+            return;
         foreach (Transform child in containerParent)
         {
-            child.GetComponent<Image>().sprite = inactiveContainer;
+            Image img = child.GetComponent<Image>();
+            if (img != null)
+                child.GetComponent<Image>().sprite = inactiveContainer;
         }
+        index = Mathf.Clamp(index, 0, containerParent.childCount - 1);
         InvSelected = index;
 
         containerParent.GetChild(index).GetComponent<Image>().sprite = activeContainer;
 
-        if (index < 0 || index >= slotData.Count || index >= containerParent.childCount)
+        if (index >= slotData.Count || !slotData[index].HasValue)
         {
-            Debug.Log("Not all met");
             DetailText.text = "";
             SelectedPlantData = null;
             SelectedSeeds = false;
             return;
         }
-        var selected = slotData[index];
+        var selected = slotData[index].Value;
         SelectedSeeds = selected.category == Tabs.Seeds;
         SelectedPlantData = selected.data;
         DetailText.text = SelectedPlantData.plantDetails;
     }
     public void SwitchTabs(Tabs tab)
     {
+        CancelItemHeld();
         currentTab = tab;
         List<GameObject> tabObject = new();
         foreach (Transform child in tabParent)
@@ -222,10 +446,9 @@ public class Inventory : MonoBehaviour
                 tabParent.transform.GetChild(3).GetComponent<Image>().sprite = activeTab;
                 break;
         }
-        if(UIManager.instance.IsOpen(UIPanel.Inventory))
+        if (UIManager.instance.IsOpen(UIPanel.Inventory))
             InitialiseInv();
     }
-
     #region PlantInv
     public void SetActiveSeed(PlantData data)
     {
